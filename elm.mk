@@ -22,11 +22,11 @@ else
 	GOAT_URL = "https://s3-ap-northeast-1.amazonaws.com/yosssi/goat/linux_amd64/goat"
 endif
 
-all: build/main.js build/main.css build/index.html
+all: build/main.js build/main.css build/index.html build/interop.js
 
 install: src bin build \
 				 elm-package.json \
-				 src/Main.elm styles/main.scss index.html \
+				 src/Main.elm src/interop.js styles/main.scss index.html \
 				 bin/goat goat.json \
 				 bin/devd bin/wellington
 
@@ -39,11 +39,17 @@ watch:
 build bin src styles:
 	mkdir -p $@
 
-styles/main.scss index.html: styles
+styles/main.scss: styles
 	test -s $@ || touch $@
 
 src/Main.elm: src
 	test -s $@ || echo "$$main_elm" > $@
+
+src/interop.js: src
+	test -s $@ || echo "$$interop_js" > $@
+
+index.html:
+	test -s $@ || echo "$$index_html" > $@
 
 bin/devd:
 	curl ${DEVD_URL} -L -o $@.tgz
@@ -70,6 +76,9 @@ build/main.css: styles/main.scss
 
 build/main.js: src/*.elm
 	elm make $(ELM_ENTRY) --warn --output $@
+
+build/interop.js: src/interop.js
+	cp $? $@
 
 build/index.html: index.html
 	cp $? $@
@@ -155,3 +164,26 @@ define elm_package_json
 }
 endef
 export elm_package_json
+
+define interop_js
+window.onload = function() {
+  var app = Elm.fullscreen(Elm.Main, {});
+};
+endef
+export interop_js
+
+define index_html
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Elm Project</title>
+	<link rel="stylesheet" href="/main.css">
+</head>
+<body>
+</body>
+  <script type="text/javascript" src="main.js"></script>
+  <script type="text/javascript" src="interop.js"></script>
+</html>
+endef
+export index_html
