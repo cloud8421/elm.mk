@@ -36,7 +36,7 @@ server:
 watch:
 	bin/goat
 
-build bin src:
+build bin src styles:
 	mkdir -p $@
 
 styles/main.scss index.html: styles
