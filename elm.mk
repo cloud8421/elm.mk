@@ -33,9 +33,7 @@ server:
 	bin/devd -w build -l build/
 
 watch:
-	watchman-make -p 'src/*.elm' -t build/main.js \
-								-p 'styles/*.scss' -t build/main.css \
-								-p 'index.html' -t build/index.html
+	bin/goat
 
 build bin src:
 	mkdir -p $@
