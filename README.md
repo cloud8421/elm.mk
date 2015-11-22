@@ -12,7 +12,7 @@ a working Elm installation.
 - [x] Scss compilation via [Wellington](https://github.com/wellington/wellington)
 - [x] Watch and recompile via [goat](https://github.com/yosssi/goat)
 - [x] Live reload via [devd](https://github.com/cortesi/devd)
-- [ ] File generators based on templates
+- [x] File generators based on templates
 
 ## Setup from scratch
 
@@ -22,5 +22,17 @@ a working Elm installation.
 
 ## Project workflow
 
-By running `make` you will compile the project in `build`. Running `make watch` fill watch your files
-and recompile accordingly when they get saved.
+Main commands:
+
+- `make`: compiles the project into `build`
+- `make watch`: watches files, compiles into build on save
+- `make server`: serves the build folder with a local http server
+
+Some guidelines:
+
+- Files generated into `build` should not be edited manually
+- All other files can be modified
+- Source `.elm` files should be placed in `src`.
+- `src/interop.js` is your entry point: it bootstraps the Elm app and can be extended for other port-based features. Gets copied the way it is into `build`.
+- `styles/main.scss` is the stylesheet main file.
+- `index.html` gets copied the way it is into `build`
