@@ -25,6 +25,7 @@ endif
 all: build/main.js build/main.css build/index.html
 
 install: src bin build \
+				 elm-package.json \
 				 src/Main.elm styles/main.scss index.html \
 				 bin/goat goat.json \
 				 bin/devd bin/wellington
@@ -57,6 +58,9 @@ bin/goat:
 
 goat.json:
 	echo "$$goat_config" > $@
+
+elm-package.json:
+	elm package install -y evancz/start-app
 
 build/main.css: styles/main.scss
 	bin/wt compile -b build/ $?
