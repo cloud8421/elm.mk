@@ -39,8 +39,11 @@ watch:
 build bin src:
 	mkdir -p $@
 
-src/Main.elm styles/main.scss index.html:
+styles/main.scss index.html: styles
 	test -s $@ || touch $@
+
+src/Main.elm: src
+	test -s $@ || echo "$$main_elm" > $@
 
 bin/devd:
 	curl ${DEVD_URL} -L -o $@.tgz
@@ -60,7 +63,7 @@ goat.json:
 	echo "$$goat_config" > $@
 
 elm-package.json:
-	elm package install -y evancz/start-app
+	echo "$$elm_package_json" > $@
 
 build/main.css: styles/main.scss
 	bin/wt compile -b build/ $?
@@ -102,3 +105,50 @@ define goat_config
 }
 endef
 export goat_config
+
+define main_elm
+module Main where
+
+import Html exposing (div, button, text)
+import Html.Events exposing (onClick)
+import StartApp.Simple as StartApp
+
+main =
+  StartApp.start { model = model, view = view, update = update }
+
+model = 0
+
+view address model =
+  div []
+    [ button [ onClick address Decrement ] [ text "-" ]
+    , div [] [ text (toString model) ]
+    , button [ onClick address Increment ] [ text "+" ]
+    ]
+
+type Action = Increment | Decrement
+
+update action model =
+  case action of
+    Increment -> model + 1
+    Decrement -> model - 1
+endef
+export main_elm
+
+define elm_package_json
+{
+    "version": "1.0.0",
+    "summary": "helpful summary of your project, less than 80 characters",
+    "repository": "https://github.com/user/project.git",
+    "license": "BSD3",
+    "source-directories": [
+        "src"
+    ],
+    "exposed-modules": [],
+    "dependencies": {
+        "elm-lang/core": "3.0.0 <= v < 4.0.0",
+        "evancz/start-app": "2.0.2 <= v < 3.0.0"
+    },
+    "elm-version": "0.16.0 <= v < 0.17.0"
+}
+endef
+export elm_package_json
