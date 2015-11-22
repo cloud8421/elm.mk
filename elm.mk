@@ -26,7 +26,8 @@ all: build/main.js build/main.css build/index.html
 
 install: src bin build \
 				 src/Main.elm styles/main.scss index.html \
-				 bin/goat bin/devd bin/wellington
+				 bin/goat goat.json \
+				 bin/devd bin/wellington
 
 server:
 	bin/devd -w build -l build/
@@ -56,6 +57,9 @@ bin/goat:
 	curl ${GOAT_URL} -L -o $@
 	chmod +x $@
 
+goat.json:
+	echo "$$goat_config" > $@
+
 build/main.css: styles/main.scss
 	bin/wt compile -b build/ $?
 
@@ -64,3 +68,35 @@ build/main.js: src/*.elm
 
 build/index.html: index.html
 	cp $? $@
+
+define goat_config
+{
+  "watchers": [
+    {
+      "extension": "elm",
+      "tasks": [
+        {
+          "command": "make build/main.js"
+        }
+      ]
+    },
+    {
+      "extension": "scss",
+      "tasks": [
+        {
+          "command": "make build/main.css"
+        }
+      ]
+    },
+    {
+      "extension": "html",
+      "tasks": [
+        {
+          "command": "make build/index.html"
+        }
+      ]
+    }
+  ]
+}
+endef
+export goat_config
