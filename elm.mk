@@ -1,7 +1,7 @@
 .PHONY: install server watch
 ELM_ENTRY = src/Main.elm
 DEVD_VERSION = 0.3
-WELLINGTON_VERSION = 1.0.0
+WELLINGTON_VERSION = 1.0.2
 OS := $(shell uname)
 
 ifeq ($(OS),Darwin)
