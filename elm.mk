@@ -66,7 +66,7 @@ elm-package.json:
 build/main.css: styles/*.scss
 	bin/wt compile -b build/ styles/main.scss
 
-build/main.js: src/*.elm
+build/main.js: src/*.elm src/**/*.elm
 	elm make $(ELM_ENTRY) --warn --output $@
 
 build/interop.js: src/interop.js
