@@ -110,28 +110,47 @@ export goat_config
 define main_elm
 module Main where
 
-import Html exposing (div, button, text)
-import Html.Events exposing (onClick)
-import StartApp.Simple as StartApp
+import Html exposing (div, text, Html)
+import StartApp as StartApp
+import Task exposing (Task)
+import Effects exposing (Effects, Never)
 
-main =
-  StartApp.start { model = model, view = view, update = update }
+type Action = NoOp
+type alias Model = Int
 
+noFx : a -> ( a, Effects b )
+noFx model =
+  (model, Effects.none)
+
+model : Model
 model = 0
 
+view : Signal.Address Action -> Model -> Html
 view address model =
-  div []
-    [ button [ onClick address Decrement ] [ text "-" ]
-    , div [] [ text (toString model) ]
-    , button [ onClick address Increment ] [ text "+" ]
-    ]
+  div
+    []
+    [ model |> toString |> text ]
 
-type Action = Increment | Decrement
-
+update : Action -> Model -> (Model, Effects Action)
 update action model =
   case action of
-    Increment -> model + 1
-    Decrement -> model - 1
+    NoOp -> noFx model
+
+app : StartApp.App Model
+app =
+  StartApp.start { init = noFx model
+                 , view = view
+                 , update = update
+                 , inputs = []
+                 }
+                 
+main : Signal Html
+main =
+  app.html
+
+port tasks : Signal (Task.Task Never ())
+port tasks =
+  app.tasks
 endef
 export main_elm
 
