@@ -63,8 +63,8 @@ goat.json:
 elm-package.json:
 	echo "$$elm_package_json" > $@
 
-build/main.css: styles/main.scss
-	bin/wt compile -b build/ $?
+build/main.css: styles/*.scss
+	bin/wt compile -b build/ styles/main.scss
 
 build/main.js: src/*.elm
 	elm make $(ELM_ENTRY) --warn --output $@
