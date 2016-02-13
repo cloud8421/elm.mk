@@ -2,16 +2,17 @@
 ELM_ENTRY = src/Main.elm
 DEVD_VERSION = 0.3
 WELLINGTON_VERSION = 1.0.2
+MODD_VERSION = 0.2
 OS := $(shell uname)
 
 ifeq ($(OS),Darwin)
 	DEVD_URL = "https://github.com/cortesi/devd/releases/download/v${DEVD_VERSION}/devd-${DEVD_VERSION}-osx64.tgz"
 	WELLINGTON_URL = "https://github.com/wellington/wellington/releases/download/v${WELLINGTON_VERSION}/wt_v${WELLINGTON_VERSION}_darwin_amd64.tar.gz"
-	GOAT_URL = "https://s3-ap-northeast-1.amazonaws.com/yosssi/goat/darwin_amd64/goat"
+	MODD_URL = "https://github.com/cortesi/modd/releases/download/v${MODD_VERSION}/modd-${MODD_VERSION}-osx64.tgz"
 else
 	DEVD_URL = "https://github.com/cortesi/devd/releases/download/v${DEVD_VERSION}/devd-${DEVD_VERSION}-linux64.tgz"
 	WELLINGTON_URL = "https://github.com/wellington/wellington/releases/download/v${WELLINGTON_VERSION}/wt_v${WELLINGTON_VERSION}_linux_amd64.tar.gz"
-	GOAT_URL = "https://s3-ap-northeast-1.amazonaws.com/yosssi/goat/linux_amd64/goat"
+	MODD_URL = "https://github.com/cortesi/modd/releases/download/v${MODD_VERSION}/modd-${MODD_VERSION}-linux64.tgz"
 endif
 
 all: build/main.js build/main.css build/index.html build/interop.js
@@ -19,14 +20,14 @@ all: build/main.js build/main.css build/index.html build/interop.js
 install: src bin build \
 				 elm-package.json \
 				 src/Main.elm src/interop.js styles/main.scss index.html \
-				 bin/goat goat.json \
+				 bin/modd modd.conf \
 				 bin/devd bin/wt
 
 server:
 	bin/devd -w build -l build/
 
 watch:
-	bin/goat
+	bin/modd
 
 build bin src styles:
 	mkdir -p $@
@@ -53,12 +54,13 @@ bin/wt:
 	tar -xzf $@.tgz -C bin/
 	rm $@.tgz
 
-bin/goat:
-	curl ${GOAT_URL} -L -o $@
-	chmod +x $@
+bin/modd:
+	curl ${MODD_URL} -L -o $@.tgz
+	tar -xzf $@.tgz -C bin/ --strip 3
+	rm $@.tgz
 
-goat.json:
-	echo "$$goat_config" > $@
+modd.conf:
+	echo "$$modd_config" > $@
 
 elm-package.json:
 	echo "$$elm_package_json" > $@
@@ -75,37 +77,24 @@ build/interop.js: src/interop.js
 build/index.html: index.html
 	cp $? $@
 
-define goat_config
-{
-  "watchers": [
-    {
-      "extension": "elm",
-      "tasks": [
-        {
-          "command": "make build/main.js"
-        }
-      ]
-    },
-    {
-      "extension": "scss",
-      "tasks": [
-        {
-          "command": "make build/main.css"
-        }
-      ]
-    },
-    {
-      "extension": "html",
-      "tasks": [
-        {
-          "command": "make build/index.html"
-        }
-      ]
-    }
-  ]
+define modd_config
+src/**/*.elm {
+  prep: make build/main.js
+}
+src/**/*.js {
+  prep: make build/interop.js
+}
+styles/**/*.scss {
+  prep: make build/main.css
+}
+index.html {
+  prep: make build/index.html
+}
+build/** {
+	daemon: make server
 }
 endef
-export goat_config
+export modd_config
 
 define main_elm
 module Main where
@@ -143,7 +132,7 @@ app =
                  , update = update
                  , inputs = []
                  }
-                 
+
 main : Signal Html
 main =
   app.html
