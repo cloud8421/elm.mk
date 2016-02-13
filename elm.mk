@@ -20,7 +20,7 @@ install: src bin build \
 				 elm-package.json \
 				 src/Main.elm src/interop.js styles/main.scss index.html \
 				 bin/goat goat.json \
-				 bin/devd bin/wellington
+				 bin/devd bin/wt
 
 server:
 	bin/devd -w build -l build/
@@ -48,7 +48,7 @@ bin/devd:
 	tar -xzf $@.tgz -C bin/ --strip 1
 	rm $@.tgz
 
-bin/wellington:
+bin/wt:
 	curl ${WELLINGTON_URL} -L -o $@.tgz
 	tar -xzf $@.tgz -C bin/
 	rm $@.tgz
