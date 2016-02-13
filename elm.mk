@@ -21,7 +21,8 @@ install: src bin build \
 				 elm-package.json \
 				 src/Main.elm src/interop.js styles/main.scss index.html \
 				 bin/modd modd.conf \
-				 bin/devd bin/wt
+				 bin/devd bin/wt \
+				 .gitignore
 
 server:
 	bin/devd -w build -l build/
@@ -64,6 +65,9 @@ modd.conf:
 
 elm-package.json:
 	echo "$$elm_package_json" > $@
+
+.gitignore:
+	echo "$$gitignore" > $@
 
 build/main.css: styles/*.scss
 	bin/wt compile -b build/ styles/main.scss
@@ -187,3 +191,11 @@ define index_html
 </html>
 endef
 export index_html
+
+define gitignore
+elm-stuff
+elm.js
+/build/*
+/bin/*
+endef
+export gitignore
