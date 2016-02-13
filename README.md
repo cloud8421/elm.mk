@@ -15,7 +15,7 @@ development environment. This means that it tries as much as possible to bundle 
 - [x] Project scaffold generation
 - [x] Elm compilation with warnings
 - [x] Scss compilation via [Wellington](https://github.com/wellington/wellington)
-- [x] Watch and recompile via [goat](https://github.com/yosssi/goat)
+- [x] Watch and recompile via [modd](https://github.com/cortesi/modd)
 - [x] Live reload via [devd](https://github.com/cortesi/devd)
 - [x] File generators based on templates
 
@@ -30,8 +30,8 @@ development environment. This means that it tries as much as possible to bundle 
 Main commands:
 
 - `make`: compiles the project into `build`
-- `make watch`: watches files, compiles into build on save
 - `make server`: serves the build folder with a local http server
+- `make watch`: starts the file watcher and the http server, recompiling files on save
 
 Some guidelines:
 
@@ -42,7 +42,7 @@ Some guidelines:
 - `styles/main.scss` is the stylesheet main file.
 - `index.html` gets copied the way it is into `build`
 
-It may also be worth checking out the documentation for the software used in this boilerplate (like Devd), as they provide functionality that it's not covered here.
+It may also be worth checking out the documentation for the software used in this boilerplate (like Devd or Modd), as they provide functionality that it's not covered here.
 
 ## FAQs/Comments
 
