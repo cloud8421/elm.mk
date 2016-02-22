@@ -55,5 +55,8 @@ It may also be worth checking out the documentation for the software used in thi
 - Why Make?
 - Make is ubiquitous, mostly pre-installed (or very easy to install) and language-agnostic. It takes some time to adjust to it, but it's fast, effective and modular.
 
+- This make task is not optimal, it's much better if you change it like this!
+- Please submit a PR, I'm happy to learn
+
 - I don't know Make, but I'd like to help. Where can I learn more?
 - Smashing Magazine has a very good introduction and there are good books out there. They mostly focus on usage with C, but they should work out fine.
