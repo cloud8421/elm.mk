@@ -1,9 +1,16 @@
-.PHONY: install server watch
+.PHONY: install server watch help
 ELM_ENTRY = src/Main.elm
 DEVD_VERSION = 0.3
 WELLINGTON_VERSION = 1.0.2
 MODD_VERSION = 0.2
 OS := $(shell uname)
+INSTALL_TARGETS = src bin build \
+									elm-package.json \
+									src/Main.elm src/interop.js styles/main.scss index.html \
+									bin/modd modd.conf \
+									bin/devd bin/wt \
+									.gitignore
+COMPILE_TARGETS = build/main.js build/main.css build/index.html build/interop.js
 
 ifeq ($(OS),Darwin)
 	DEVD_URL = "https://github.com/cortesi/devd/releases/download/v${DEVD_VERSION}/devd-${DEVD_VERSION}-osx64.tgz"
@@ -15,20 +22,19 @@ else
 	MODD_URL = "https://github.com/cortesi/modd/releases/download/v${MODD_VERSION}/modd-${MODD_VERSION}-linux64.tgz"
 endif
 
-all: build/main.js build/main.css build/index.html build/interop.js
+all: $(COMPILE_TARGETS) ## Compiles project files
 
-install: src bin build \
-				 elm-package.json \
-				 src/Main.elm src/interop.js styles/main.scss index.html \
-				 bin/modd modd.conf \
-				 bin/devd bin/wt \
-				 .gitignore
+install: $(INSTALL_TARGETS) ## Installs prerequisites and generates file/folder structure
 
-server:
+server: ## Runs a local server for development
 	bin/devd -w build -l build/
 
-watch:
+watch: ## Watches files for changes, runs a local dev server and triggers live reload
 	bin/modd
+
+help: ## Prints a help guide
+	@echo "Available tasks:"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 build bin src styles:
 	mkdir -p $@
