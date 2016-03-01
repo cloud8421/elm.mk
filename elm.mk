@@ -1,4 +1,4 @@
-.PHONY: install server watch help
+.PHONY: install server watch clean help
 ELM_ENTRY = src/Main.elm
 DEVD_VERSION = 0.3
 WELLINGTON_VERSION = 1.0.2
@@ -31,6 +31,9 @@ server: ## Runs a local server for development
 
 watch: ## Watches files for changes, runs a local dev server and triggers live reload
 	bin/modd
+
+clean: ## Removes compiled files
+	rm build/*
 
 help: ## Prints a help guide
 	@echo "Available tasks:"
