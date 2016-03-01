@@ -29,9 +29,12 @@ development environment. This means that it tries as much as possible to bundle 
 
 Main commands:
 
+- `make install`: installs all needed dependencies
 - `make`: compiles the project into `build`
 - `make server`: serves the build folder with a local http server
 - `make watch`: starts the file watcher and the http server, recompiling files on save
+- `make clean`: deletes all compiled files
+- `make help`: shows all main tasks
 
 Some guidelines:
 
