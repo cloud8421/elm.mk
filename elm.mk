@@ -3,12 +3,14 @@ ELM_ENTRY = src/Main.elm
 DEVD_VERSION = 0.3
 WELLINGTON_VERSION = 1.0.2
 MODD_VERSION = 0.2
+ELM_TEST_VERSION = 0.16
 OS := $(shell uname)
 INSTALL_TARGETS = src bin build \
 									elm-package.json \
 									src/Main.elm src/interop.js styles/main.scss index.html \
 									bin/modd modd.conf \
 									bin/devd bin/wt \
+									node_modules/.bin/elm-test \
 									.gitignore
 COMPILE_TARGETS = build/main.js build/main.css build/index.html build/interop.js
 
@@ -74,6 +76,9 @@ modd.conf:
 
 elm-package.json:
 	echo "$$elm_package_json" > $@
+
+node_modules/.bin/elm-test:
+	npm install elm-test@${ELM_TEST_VERSION}
 
 .gitignore:
 	echo "$$gitignore" > $@
