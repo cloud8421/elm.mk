@@ -1,5 +1,6 @@
-.PHONY: install server watch clean help
+.PHONY: install server watch clean test help
 ELM_ENTRY = src/Main.elm
+NODE_BIN_DIRECTORY = node_modules/.bin
 DEVD_VERSION = 0.3
 WELLINGTON_VERSION = 1.0.2
 MODD_VERSION = 0.2
@@ -10,9 +11,9 @@ INSTALL_TARGETS = src bin build \
 									src/Main.elm src/interop.js styles/main.scss index.html \
 									bin/modd modd.conf \
 									bin/devd bin/wt \
-									node_modules/.bin/elm-test \
 									.gitignore
 COMPILE_TARGETS = build/main.js build/main.css build/index.html build/interop.js
+TEST_TARGETS = $(NODE_BIN_DIRECTORY)/elm-test test/TestRunner.elm
 
 ifeq ($(OS),Darwin)
 	DEVD_URL = "https://github.com/cortesi/devd/releases/download/v${DEVD_VERSION}/devd-${DEVD_VERSION}-osx64.tgz"
@@ -37,6 +38,9 @@ watch: ## Watches files for changes, runs a local dev server and triggers live r
 clean: ## Removes compiled files
 	rm build/*
 
+test: $(TEST_TARGETS) ## Runs unit tests via elm-test
+	$(NODE_BIN_DIRECTORY)/elm-test test/TestRunner.elm
+
 help: ## Prints a help guide
 	@echo "Available tasks:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -52,6 +56,11 @@ src/Main.elm: src
 
 src/interop.js: src
 	test -s $@ || echo "$$interop_js" > $@
+
+test/TestRunner.elm:
+	$(NODE_BIN_DIRECTORY)/elm-test init --yes
+	mkdir -p test
+	mv *.elm test/
 
 index.html:
 	test -s $@ || echo "$$index_html" > $@
@@ -168,7 +177,8 @@ define elm_package_json
     "repository": "https://github.com/user/project.git",
     "license": "BSD3",
     "source-directories": [
-        "src"
+        "src",
+        "test"
     ],
     "exposed-modules": [],
     "dependencies": {
