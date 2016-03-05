@@ -18,6 +18,7 @@ development environment. This means that it tries as much as possible to bundle 
 - [x] Watch and recompile via [modd](https://github.com/cortesi/modd)
 - [x] Live reload via [devd](https://github.com/cortesi/devd)
 - [x] File generators based on templates
+- [x] Support for unit testing (optional)
 
 ## Setup from scratch
 
