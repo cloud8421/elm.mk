@@ -18,6 +18,7 @@ development environment. This means that it tries as much as possible to bundle 
 - [x] Watch and recompile via [modd](https://github.com/cortesi/modd)
 - [x] Live reload via [devd](https://github.com/cortesi/devd)
 - [x] File generators based on templates
+- [x] Support for unit testing (optional)
 
 ## Setup from scratch
 
@@ -46,6 +47,14 @@ Some guidelines:
 - `index.html` gets copied the way it is into `build`
 
 It may also be worth checking out the documentation for the software used in this boilerplate (like Devd or Modd), as they provide functionality that it's not covered here.
+
+## Testing
+
+It's possible to add support for unit testing via <https://github.com/rtfeldman/node-elm-test>.
+
+To do that, it's enough to call `make test`, which will install the needed dependencies. Note that this requires Node to be installed.
+
+Calling `make test` again will rerun the test suite.
 
 ## FAQs/Comments
 
