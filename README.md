@@ -47,6 +47,14 @@ Some guidelines:
 
 It may also be worth checking out the documentation for the software used in this boilerplate (like Devd or Modd), as they provide functionality that it's not covered here.
 
+## Testing
+
+It's possible to add support for unit testing via <https://github.com/rtfeldman/node-elm-test>.
+
+To do that, it's enough to call `make test`, which will install the needed dependencies. Note that this requires Node to be installed.
+
+Calling `make test` again will rerun the test suite.
+
 ## FAQs/Comments
 
 - I don't think this should use X, Y is a better fit.
