@@ -7,6 +7,7 @@ MODD_VERSION = 0.2
 ELM_TEST_VERSION = 0.16
 OS := $(shell uname)
 INSTALL_TARGETS = src bin build \
+									Makefile \
 									elm-package.json \
 									src/Main.elm src/interop.js styles/main.scss index.html \
 									bin/modd modd.conf \
@@ -47,6 +48,9 @@ help: ## Prints a help guide
 
 build bin src styles:
 	mkdir -p $@
+
+Makefile:
+	test -s $@ || echo "$$Makefile" > $@
 
 styles/main.scss: styles
 	test -s $@ || touch $@
@@ -103,6 +107,11 @@ build/interop.js: src/interop.js
 
 build/index.html: index.html
 	cp $? $@
+
+define Makefile
+include elm.mk
+endef
+export Makefile
 
 define modd_config
 src/**/*.elm {

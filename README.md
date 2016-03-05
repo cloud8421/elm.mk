@@ -23,8 +23,11 @@ development environment. This means that it tries as much as possible to bundle 
 ## Setup from scratch
 
 - `mkdir my_new_project && cd my_new_project`
-- `curl -o Makefile https://raw.githubusercontent.com/cloud8421/elm.mk/master/elm.mk`
-- `make install`
+- `curl https://raw.githubusercontent.com/cloud8421/elm.mk/master/elm.mk`
+- `make -f elm.mk install`
+
+This will generate the needed folder structure and files. Note that at the end of `make install`, you're left with
+an empty `Makefile` that includes `elm.mk`, so that you can extend it for your needs and/or override its behaviour.
 
 ## Project workflow
 
