@@ -1,5 +1,6 @@
 .PHONY: install server watch clean test help
 ELM_ENTRY = src/Main.elm
+ELM_FILES = $(shell find src -type f -name '*.elm')
 NODE_BIN_DIRECTORY = node_modules/.bin
 DEVD_VERSION = 0.3
 WELLINGTON_VERSION = 1.0.2
@@ -95,7 +96,7 @@ node_modules/.bin/elm-test:
 build/main.css: styles/*.scss
 	bin/wt compile -b build/ styles/main.scss
 
-build/main.js: src/*.elm src/**/*.elm
+build/main.js: $(ELM_FILES)
 	elm make $(ELM_ENTRY) --yes --warn --output $@
 
 build/interop.js: src/interop.js
