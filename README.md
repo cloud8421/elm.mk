@@ -61,17 +61,17 @@ Calling `make test` again will rerun the test suite.
 
 ## FAQs/Comments
 
-- I don't think this should use X, Y is a better fit.
-- As long as it's easy to install in portable format (i.e. download in the project folder and run), please feel free to state the case for a replacement
+#### I don't think this should use X, Y is a better fit.
+As long as it's easy to install in portable format (i.e. download in the project folder and run), please feel free to state the case for a replacement
 
-- Why is feature X missing?
-- Probably because I haven't thought about it.
+#### Why is feature X missing?
+Probably because I haven't thought about it.
 
-- Why Make?
-- Make is ubiquitous, mostly pre-installed (or very easy to install) and language-agnostic. It takes some time to adjust to it, but it's fast, effective and modular.
+#### Why Make?
+Make is ubiquitous, mostly pre-installed (or very easy to install) and language-agnostic. It takes some time to adjust to it, but it's fast, effective and modular.
 
-- This make task is not optimal, it's much better if you change it like this!
-- Please submit a PR, I'm happy to learn
+#### This make task is not optimal, it's much better if you change it like this!
+Please submit a PR, I'm happy to learn
 
-- I don't know Make, but I'd like to help. Where can I learn more?
-- Smashing Magazine has a very good introduction and there are good books out there. They mostly focus on usage with C, but they should work out fine.
+#### I don't know Make, but I'd like to help. Where can I learn more?
+Smashing Magazine has a [very good introduction](https://www.smashingmagazine.com/2015/10/building-web-applications-with-make/) and there are [good books](http://shop.oreilly.com/product/9780596006105.do) out there. They mostly focus on usage with C, but they should work out fine.
