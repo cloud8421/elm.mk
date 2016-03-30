@@ -13,8 +13,13 @@ INSTALL_TARGETS = src bin build \
 									src/Main.elm src/interop.js styles/main.scss index.html \
 									bin/modd modd.conf \
 									bin/devd bin/wt \
-									.gitignore
-COMPILE_TARGETS = build/main.js build/main.css build/index.html build/interop.js
+									.gitignore \
+									$(CUSTOM_INSTALL_TARGETS)
+COMPILE_TARGETS = build/main.js \
+									build/main.css \
+									build/index.html \
+									build/interop.js \
+									$(CUSTOM_COMPILE_TARGETS)
 TEST_TARGETS = $(NODE_BIN_DIRECTORY)/elm-test test/TestRunner.elm
 
 ifeq ($(OS),Darwin)
