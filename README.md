@@ -51,6 +51,34 @@ Some guidelines:
 
 It may also be worth checking out the documentation for the software used in this boilerplate (like Devd or Modd), as they provide functionality that it's not covered here.
 
+## Extending install targets
+
+Install targets represent tooling dependencies that your project has.
+
+For example you may wanna add support for image compression using a hypothetical tool called `compress`, whose binary you can download.
+
+In your `Makefile`, you can add a `CUSTOM_INSTALL_TARGETS` definition, which will be picked up by `make install`:
+
+```
+CUSTOM_INSTALL_TARGETS := bin/compress
+
+bin/compress:
+  curl -o $@ http://example.com/compress
+```
+
+## Extending compile targets
+
+Compile targets represent the artifacts your project builds every time you run `make`.
+
+For example, if you want to add a second html page to the project, you can extend `CUSTOM_COMPILE_TARGETS`:
+
+```
+CUSTOM_COMPILE_TARGETS := build/home.html
+
+build/home.html: home.html
+  cp $< $@
+```
+
 ## Testing
 
 It's possible to add support for unit testing via <https://github.com/rtfeldman/node-elm-test>.
