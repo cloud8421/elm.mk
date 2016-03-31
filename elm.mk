@@ -133,7 +133,7 @@ index.html {
   prep: make build/index.html
 }
 build/** {
-	daemon: make server
+  daemon: make server
 }
 endef
 export modd_config
@@ -221,7 +221,7 @@ define index_html
 <head>
   <meta charset="UTF-8">
   <title>Elm Project</title>
-	<link rel="stylesheet" href="/main.css">
+  <link rel="stylesheet" href="/main.css">
 </head>
 <body>
 </body>
