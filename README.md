@@ -23,7 +23,7 @@ development environment. This means that it tries as much as possible to bundle 
 ## Setup from scratch
 
 - `mkdir my_new_project && cd my_new_project`
-- `curl https://raw.githubusercontent.com/cloud8421/elm.mk/master/elm.mk`
+- `curl -o elm.mk https://raw.githubusercontent.com/cloud8421/elm.mk/master/elm.mk`
 - `make -f elm.mk install`
 
 This will generate the needed folder structure and files. Note that at the end of `make install`, you're left with
