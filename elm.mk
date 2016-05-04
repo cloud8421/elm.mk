@@ -21,6 +21,7 @@ COMPILE_TARGETS = build/main.js \
 									build/interop.js \
 									$(CUSTOM_COMPILE_TARGETS)
 TEST_TARGETS = $(NODE_BIN_DIRECTORY)/elm-test test/TestRunner.elm
+SERVER_OPTS = -w build -l build/ $(CUSTOM_SERVER_OPTS)
 
 ifeq ($(OS),Darwin)
 	DEVD_URL = "https://github.com/cortesi/devd/releases/download/v${DEVD_VERSION}/devd-${DEVD_VERSION}-osx64.tgz"
@@ -37,7 +38,7 @@ all: $(COMPILE_TARGETS) ## Compiles project files
 install: $(INSTALL_TARGETS) ## Installs prerequisites and generates file/folder structure
 
 server: ## Runs a local server for development
-	bin/devd -w build -l build/
+	bin/devd $(SERVER_OPTS)
 
 watch: ## Watches files for changes, runs a local dev server and triggers live reload
 	bin/modd
