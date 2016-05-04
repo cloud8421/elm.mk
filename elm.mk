@@ -4,7 +4,7 @@ ELM_FILES = $(shell find src -type f -name '*.elm')
 NODE_BIN_DIRECTORY = node_modules/.bin
 DEVD_VERSION = 0.3
 WELLINGTON_VERSION = 1.0.2
-MODD_VERSION = 0.2
+MODD_VERSION = 0.3
 ELM_TEST_VERSION = 0.16
 OS := $(shell uname)
 INSTALL_TARGETS = src bin build \
@@ -87,7 +87,7 @@ bin/wt:
 
 bin/modd:
 	curl ${MODD_URL} -L -o $@.tgz
-	tar -xzf $@.tgz -C bin/ --strip 3
+	tar -xzf $@.tgz -C bin/ --strip 1
 	rm $@.tgz
 
 modd.conf:
