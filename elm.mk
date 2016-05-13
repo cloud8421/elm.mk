@@ -140,49 +140,52 @@ endef
 export modd_config
 
 define main_elm
-module Main where
+module Main exposing (..)
 
 import Html exposing (div, text, Html)
-import StartApp as StartApp
-import Task exposing (Task)
-import Effects exposing (Effects, Never)
+import Html.App as Html
+import Platform.Sub as Sub
 
-type Action = NoOp
-type alias Model = Int
 
-noFx : a -> ( a, Effects b )
-noFx model =
-  (model, Effects.none)
+type Msg
+    = NoOp
+
+
+type alias Model =
+    Int
+
 
 model : Model
-model = 0
+model =
+    0
 
-view : Signal.Address Action -> Model -> Html
-view address model =
-  div
-    []
-    [ model |> toString |> text ]
 
-update : Action -> Model -> (Model, Effects Action)
-update action model =
-  case action of
-    NoOp -> noFx model
+view : Model -> Html Msg
+view model =
+    div []
+        [ model |> toString |> text ]
 
-app : StartApp.App Model
-app =
-  StartApp.start { init = noFx model
-                 , view = view
-                 , update = update
-                 , inputs = []
-                 }
 
-main : Signal Html
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        NoOp ->
+            ( model, Cmd.none )
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.none
+
+
+main : Program Never
 main =
-  app.html
-
-port tasks : Signal (Task.Task Never ())
-port tasks =
-  app.tasks
+    Html.program
+        { init = ( model, Cmd.none )
+        , view = view
+        , update = update
+        , subscriptions = subscriptions
+        }
 endef
 export main_elm
 
@@ -198,20 +201,18 @@ define elm_package_json
     ],
     "exposed-modules": [],
     "dependencies": {
-        "elm-lang/core": "3.0.0 <= v < 4.0.0",
-        "evancz/elm-effects": "2.0.1 <= v < 3.0.0",
-        "evancz/elm-html": "4.0.2 <= v < 5.0.0",
-        "evancz/elm-http": "3.0.0 <= v < 4.0.0",
-        "evancz/start-app": "2.0.2 <= v < 3.0.0"
+        "elm-lang/core": "4.0.0 <= v < 5.0.0",
+        "elm-lang/html": "1.0.0 <= v < 2.0.0",
+        "evancz/elm-http": "3.0.1 <= v < 4.0.0"
     },
-    "elm-version": "0.16.0 <= v < 0.17.0"
+    "elm-version": "0.17.0 <= v < 0.18.0"
 }
 endef
 export elm_package_json
 
 define interop_js
 window.onload = function() {
-  var app = Elm.fullscreen(Elm.Main, {});
+  var app = Elm.Main.fullscreen();
 };
 endef
 export interop_js
