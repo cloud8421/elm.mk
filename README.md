@@ -66,6 +66,16 @@ bin/compress:
   curl -o $@ http://example.com/compress
 ```
 
+## Customise the build folder
+
+You can change the build destination folder by editing the generated `Makefile`:
+
+```
+BUILD_FOLDER = dest
+```
+
+Note that the change doesn't affect generated files (like `modd.conf` or `.gitignore`, they need to be amended manually).
+
 ## Extending compile targets
 
 Compile targets represent the artifacts your project builds every time you run `make`.

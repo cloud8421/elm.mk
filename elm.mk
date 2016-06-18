@@ -7,7 +7,7 @@ WELLINGTON_VERSION = 1.0.2
 MODD_VERSION = 0.3
 ELM_TEST_VERSION = 0.16
 OS := $(shell uname)
-INSTALL_TARGETS = src bin build \
+INSTALL_TARGETS = src bin $(BUILD_FOLDER) \
 									Makefile \
 									elm-package.json \
 									src/Main.elm src/interop.js styles/main.scss index.html \
@@ -15,13 +15,14 @@ INSTALL_TARGETS = src bin build \
 									bin/devd bin/wt \
 									.gitignore \
 									$(CUSTOM_INSTALL_TARGETS)
-COMPILE_TARGETS = build/main.js \
-									build/main.css \
-									build/index.html \
-									build/interop.js \
+COMPILE_TARGETS = $(BUILD_FOLDER) \
+									$(BUILD_FOLDER)/main.js \
+									$(BUILD_FOLDER)/main.css \
+									$(BUILD_FOLDER)/index.html \
+									$(BUILD_FOLDER)/interop.js \
 									$(CUSTOM_COMPILE_TARGETS)
 TEST_TARGETS = $(NODE_BIN_DIRECTORY)/elm-test test/TestRunner.elm
-SERVER_OPTS = -w build -l build/ $(CUSTOM_SERVER_OPTS)
+SERVER_OPTS = -w $(BUILD_FOLDER) -l $(BUILD_FOLDER)/ $(CUSTOM_SERVER_OPTS)
 
 ifeq ($(OS),Darwin)
 	DEVD_URL = "https://github.com/cortesi/devd/releases/download/v${DEVD_VERSION}/devd-${DEVD_VERSION}-osx64.tgz"
@@ -44,7 +45,7 @@ watch: ## Watches files for changes, runs a local dev server and triggers live r
 	bin/modd
 
 clean: ## Removes compiled files
-	rm build/*
+	rm $(BUILD_FOLDER)/*
 
 test: $(TEST_TARGETS) ## Runs unit tests via elm-test
 	$(NODE_BIN_DIRECTORY)/elm-test test/TestRunner.elm
@@ -53,7 +54,7 @@ help: ## Prints a help guide
 	@echo "Available tasks:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-build bin src styles:
+$(BUILD_FOLDER) bin src styles:
 	mkdir -p $@
 
 Makefile:
@@ -103,37 +104,39 @@ node_modules/.bin/elm-test:
 .gitignore:
 	echo "$$gitignore" > $@
 
-build/main.css: styles/*.scss
-	bin/wt compile -b build/ styles/main.scss
+$(BUILD_FOLDER)/main.css: styles/*.scss
+	bin/wt compile -b $(BUILD_FOLDER)/ styles/main.scss
 
-build/main.js: $(ELM_FILES)
+$(BUILD_FOLDER)/main.js: $(ELM_FILES)
 	elm make $(ELM_ENTRY) --yes --warn --output $@
 
-build/interop.js: src/interop.js
+$(BUILD_FOLDER)/interop.js: src/interop.js
 	cp $? $@
 
-build/index.html: index.html
+$(BUILD_FOLDER)/index.html: index.html
 	cp $? $@
 
 define Makefile
+BUILD_FOLDER = build
+
 include elm.mk
 endef
 export Makefile
 
 define modd_config
 src/**/*.elm {
-  prep: make build/main.js
+  prep: make $(BUILD_FOLDER)/main.js
 }
 src/**/*.js {
-  prep: make build/interop.js
+  prep: make $(BUILD_FOLDER)/interop.js
 }
 styles/**/*.scss {
-  prep: make build/main.css
+  prep: make $(BUILD_FOLDER)/main.css
 }
 index.html {
-  prep: make build/index.html
+  prep: make $(BUILD_FOLDER)/index.html
 }
-build/** {
+$(BUILD_FOLDER)/** {
   daemon: make server
 }
 endef
@@ -236,7 +239,7 @@ export index_html
 define gitignore
 elm-stuff
 elm.js
-/build/*
+/$(BUILD_FOLDER)/*
 /bin/*
 endef
 export gitignore
