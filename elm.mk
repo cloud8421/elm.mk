@@ -2,8 +2,8 @@
 ELM_ENTRY = src/Main.elm
 ELM_FILES = $(shell find src -type f -name '*.elm')
 NODE_BIN_DIRECTORY = node_modules/.bin
-DEVD_VERSION = 0.3
 WELLINGTON_VERSION = 1.0.2
+DEVD_VERSION = 0.6
 MODD_VERSION = 0.3
 ELM_TEST_VERSION = 0.16
 OS := $(shell uname)
