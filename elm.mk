@@ -7,6 +7,7 @@ WELLINGTON_VERSION = 1.0.2
 MODD_VERSION = 0.3
 ELM_TEST_VERSION = 0.16
 OS := $(shell uname)
+BUILD_FOLDER = build
 INSTALL_TARGETS = src bin $(BUILD_FOLDER) \
 									Makefile \
 									elm-package.json \
@@ -117,7 +118,6 @@ $(BUILD_FOLDER)/index.html: index.html
 	cp $? $@
 
 define Makefile
-BUILD_FOLDER = build
 
 include elm.mk
 endef
