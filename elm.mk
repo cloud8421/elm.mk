@@ -5,7 +5,7 @@ NODE_BIN_DIRECTORY = node_modules/.bin
 DEVD_VERSION = 0.6
 WELLINGTON_VERSION = 1.0.3
 MODD_VERSION = 0.3
-ELM_TEST_VERSION = 0.16
+ELM_TEST_VERSION = 0.17.3
 OS := $(shell uname)
 BUILD_FOLDER = build
 INSTALL_TARGETS = src bin $(BUILD_FOLDER) \
@@ -22,7 +22,7 @@ COMPILE_TARGETS = $(BUILD_FOLDER) \
 									$(BUILD_FOLDER)/index.html \
 									$(BUILD_FOLDER)/interop.js \
 									$(CUSTOM_COMPILE_TARGETS)
-TEST_TARGETS = $(NODE_BIN_DIRECTORY)/elm-test test/TestRunner.elm
+TEST_TARGETS = $(NODE_BIN_DIRECTORY)/elm-test tests/Main.elm
 SERVER_OPTS = -w $(BUILD_FOLDER) -l $(BUILD_FOLDER)/ $(CUSTOM_SERVER_OPTS)
 
 ifeq ($(OS),Darwin)
@@ -49,7 +49,7 @@ clean: ## Removes compiled files
 	rm $(BUILD_FOLDER)/*
 
 test: $(TEST_TARGETS) ## Runs unit tests via elm-test
-	$(NODE_BIN_DIRECTORY)/elm-test test/TestRunner.elm
+	$(NODE_BIN_DIRECTORY)/elm-test
 
 help: ## Prints a help guide
 	@echo "Available tasks:"
@@ -70,10 +70,8 @@ src/Main.elm: src
 src/interop.js: src
 	test -s $@ || echo "$$interop_js" > $@
 
-test/TestRunner.elm:
+tests/Main.elm:
 	$(NODE_BIN_DIRECTORY)/elm-test init --yes
-	mkdir -p test
-	mv *.elm test/
 
 index.html:
 	test -s $@ || echo "$$index_html" > $@
