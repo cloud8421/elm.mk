@@ -18,7 +18,7 @@ function fileExists() {
 files="bin/modd elm-package.json modd.conf \
        index.html styles/main.scss src/interop.js src/Main.elm \
        build/index.html build/interop.js build/main.js build/main.css \
-       dist/main.min.js dist/interop.min.js"
+       dist/main.min.js dist/interop.min.js dist/main.min.css"
 
 for file in $files
 do

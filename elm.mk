@@ -26,7 +26,8 @@ COMPILE_TARGETS = $(BUILD_FOLDER) \
 									$(CUSTOM_COMPILE_TARGETS)
 DIST_TARGETS = $(DIST_FOLDER) \
 							 $(DIST_FOLDER)/main.min.js \
-							 $(DIST_FOLDER)/interop.min.js
+							 $(DIST_FOLDER)/interop.min.js \
+							 $(DIST_FOLDER)/main.min.css
 TEST_TARGETS = $(NODE_BIN_DIRECTORY)/elm-test tests/Main.elm
 SERVER_OPTS = -w $(BUILD_FOLDER) -l $(BUILD_FOLDER)/ $(CUSTOM_SERVER_OPTS)
 
@@ -124,6 +125,10 @@ $(BUILD_FOLDER)/interop.js: src/interop.js
 
 $(BUILD_FOLDER)/index.html: index.html
 	cp $? $@
+
+$(DIST_FOLDER)/main.min.css: styles/*.scss
+	bin/wt compile -s compressed -b $(DIST_FOLDER)/ styles/main.scss
+	mv $(DIST_FOLDER)/main.css $@
 
 $(DIST_FOLDER)/main.min.js: $(BUILD_FOLDER)/main.js $(NODE_BIN_DIRECTORY)/uglifyjs
 	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- $(BUILD_FOLDER)/main.js
