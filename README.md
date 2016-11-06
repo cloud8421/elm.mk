@@ -35,6 +35,7 @@ Main commands:
 
 - `make install`: installs all needed dependencies
 - `make`: compiles the project into `build`
+- `make prod`: compresses compiled files in `dist` (only supports main js file for now)
 - `make server`: serves the build folder with a local http server
 - `make watch`: starts the file watcher and the http server, recompiling files on save
 - `make clean`: deletes all compiled files

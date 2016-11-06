@@ -6,14 +6,17 @@ DEVD_VERSION = 0.6
 WELLINGTON_VERSION = 1.0.4
 MODD_VERSION = 0.4
 ELM_TEST_VERSION = 0.17.3
+UGLIFY_JS_VERSION = 2.7.4
 OS := $(shell uname)
 BUILD_FOLDER = build
+DIST_FOLDER = dist
 INSTALL_TARGETS = src bin $(BUILD_FOLDER) \
 									Makefile \
 									elm-package.json \
 									src/Main.elm src/interop.js styles/main.scss index.html \
 									bin/modd modd.conf \
 									bin/devd bin/wt \
+									bin/mo \
 									.gitignore \
 									$(CUSTOM_INSTALL_TARGETS)
 COMPILE_TARGETS = $(BUILD_FOLDER) \
@@ -22,9 +25,15 @@ COMPILE_TARGETS = $(BUILD_FOLDER) \
 									$(BUILD_FOLDER)/index.html \
 									$(BUILD_FOLDER)/interop.js \
 									$(CUSTOM_COMPILE_TARGETS)
+DIST_TARGETS = $(DIST_FOLDER) \
+							 $(DIST_FOLDER)/main.min.js \
+							 $(DIST_FOLDER)/interop.min.js \
+							 $(DIST_FOLDER)/main.min.css \
+							 $(DIST_FOLDER)/index.html
 TEST_TARGETS = $(NODE_BIN_DIRECTORY)/elm-test tests/Main.elm
 SERVER_OPTS = -w $(BUILD_FOLDER) -l $(BUILD_FOLDER)/ $(CUSTOM_SERVER_OPTS)
 
+MO_URL = "https://raw.githubusercontent.com/tests-always-included/mo/master/mo"
 ifeq ($(OS),Darwin)
 	DEVD_URL = "https://github.com/cortesi/devd/releases/download/v${DEVD_VERSION}/devd-${DEVD_VERSION}-osx64.tgz"
 	WELLINGTON_URL = "https://github.com/wellington/wellington/releases/download/v${WELLINGTON_VERSION}/wt_v${WELLINGTON_VERSION}_darwin_amd64.tar.gz"
@@ -51,11 +60,13 @@ clean: ## Removes compiled files
 test: $(TEST_TARGETS) ## Runs unit tests via elm-test
 	$(NODE_BIN_DIRECTORY)/elm-test
 
+prod: $(DIST_TARGETS) ## Minifies build folders for production usage
+
 help: ## Prints a help guide
 	@echo "Available tasks:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-$(BUILD_FOLDER) bin src styles:
+$(BUILD_FOLDER) $(DIST_FOLDER) bin src styles:
 	mkdir -p $@
 
 Makefile:
@@ -91,14 +102,21 @@ bin/modd:
 	tar -xzf $@.tgz -C bin/ --strip 1
 	rm $@.tgz
 
+bin/mo:
+	curl $(MO_URL) -L -o $@
+	chmod +x $@
+
 modd.conf:
 	echo "$$modd_config" > $@
 
 elm-package.json:
 	echo "$$elm_package_json" > $@
 
-node_modules/.bin/elm-test:
+$(NODE_BIN_DIRECTORY)/elm-test:
 	npm install elm-test@${ELM_TEST_VERSION}
+
+$(NODE_BIN_DIRECTORY)/uglifyjs:
+	npm install uglify-js@${UGLIFY_JS_VERSION}
 
 .gitignore:
 	echo "$$gitignore" > $@
@@ -113,7 +131,20 @@ $(BUILD_FOLDER)/interop.js: src/interop.js
 	cp $? $@
 
 $(BUILD_FOLDER)/index.html: index.html
-	cp $? $@
+	main_css=/main.css main_js=/main.js interop_js=/interop.js bin/mo index.html > $@
+
+$(DIST_FOLDER)/main.min.css: styles/*.scss
+	bin/wt compile -s compressed -b $(DIST_FOLDER)/ styles/main.scss
+	mv $(DIST_FOLDER)/main.css $@
+
+$(DIST_FOLDER)/main.min.js: $(BUILD_FOLDER)/main.js $(NODE_BIN_DIRECTORY)/uglifyjs
+	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- $(BUILD_FOLDER)/main.js
+
+$(DIST_FOLDER)/interop.min.js: $(BUILD_FOLDER)/interop.js $(NODE_BIN_DIRECTORY)/uglifyjs
+	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- $(BUILD_FOLDER)/interop.js
+
+$(DIST_FOLDER)/index.html: index.html
+	main_css=/main.min.css main_js=/main.min.js interop_js=/interop.min.js bin/mo index.html > $@
 
 define Makefile
 
@@ -224,12 +255,12 @@ define index_html
 <head>
   <meta charset="UTF-8">
   <title>Elm Project</title>
-  <link rel="stylesheet" href="/main.css">
+  <link rel="stylesheet" href="{{main_css}}">
 </head>
 <body>
 </body>
-  <script type="text/javascript" src="main.js"></script>
-  <script type="text/javascript" src="interop.js"></script>
+  <script type="text/javascript" src="{{main_js}}"></script>
+  <script type="text/javascript" src="{{interop_js}}"></script>
 </html>
 endef
 export index_html
