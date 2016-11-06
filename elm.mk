@@ -119,17 +119,17 @@ $(BUILD_FOLDER)/main.css: styles/*.scss
 $(BUILD_FOLDER)/main.js: $(ELM_FILES)
 	elm make $(ELM_ENTRY) --yes --warn --output $@
 
-$(DIST_FOLDER)/main.min.js: $(BUILD_FOLDER)/main.js $(NODE_BIN_DIRECTORY)/uglifyjs
-	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- $(BUILD_FOLDER)/main.js
-
-$(DIST_FOLDER)/interop.min.js: $(BUILD_FOLDER)/interop.js $(NODE_BIN_DIRECTORY)/uglifyjs
-	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- $(BUILD_FOLDER)/interop.js
-
 $(BUILD_FOLDER)/interop.js: src/interop.js
 	cp $? $@
 
 $(BUILD_FOLDER)/index.html: index.html
 	cp $? $@
+
+$(DIST_FOLDER)/main.min.js: $(BUILD_FOLDER)/main.js $(NODE_BIN_DIRECTORY)/uglifyjs
+	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- $(BUILD_FOLDER)/main.js
+
+$(DIST_FOLDER)/interop.min.js: $(BUILD_FOLDER)/interop.js $(NODE_BIN_DIRECTORY)/uglifyjs
+	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- $(BUILD_FOLDER)/interop.js
 
 define Makefile
 
