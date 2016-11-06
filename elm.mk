@@ -6,8 +6,10 @@ DEVD_VERSION = 0.6
 WELLINGTON_VERSION = 1.0.4
 MODD_VERSION = 0.4
 ELM_TEST_VERSION = 0.17.3
+UGLIFY_JS_VERSION = 2.7.4
 OS := $(shell uname)
 BUILD_FOLDER = build
+DIST_FOLDER = dist
 INSTALL_TARGETS = src bin $(BUILD_FOLDER) \
 									Makefile \
 									elm-package.json \
@@ -22,6 +24,8 @@ COMPILE_TARGETS = $(BUILD_FOLDER) \
 									$(BUILD_FOLDER)/index.html \
 									$(BUILD_FOLDER)/interop.js \
 									$(CUSTOM_COMPILE_TARGETS)
+DIST_TARGETS = $(DIST_FOLDER) \
+							 $(DIST_FOLDER)/main.min.js
 TEST_TARGETS = $(NODE_BIN_DIRECTORY)/elm-test tests/Main.elm
 SERVER_OPTS = -w $(BUILD_FOLDER) -l $(BUILD_FOLDER)/ $(CUSTOM_SERVER_OPTS)
 
@@ -51,11 +55,13 @@ clean: ## Removes compiled files
 test: $(TEST_TARGETS) ## Runs unit tests via elm-test
 	$(NODE_BIN_DIRECTORY)/elm-test
 
+prod: $(DIST_TARGETS) ## Minifies build folders for production usage
+
 help: ## Prints a help guide
 	@echo "Available tasks:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-$(BUILD_FOLDER) bin src styles:
+$(BUILD_FOLDER) $(DIST_FOLDER) bin src styles:
 	mkdir -p $@
 
 Makefile:
@@ -97,8 +103,11 @@ modd.conf:
 elm-package.json:
 	echo "$$elm_package_json" > $@
 
-node_modules/.bin/elm-test:
+$(NODE_BIN_DIRECTORY)/elm-test:
 	npm install elm-test@${ELM_TEST_VERSION}
+
+$(NODE_BIN_DIRECTORY)/uglifyjs:
+	npm install uglify-js@${UGLIFY_JS_VERSION}
 
 .gitignore:
 	echo "$$gitignore" > $@
@@ -108,6 +117,9 @@ $(BUILD_FOLDER)/main.css: styles/*.scss
 
 $(BUILD_FOLDER)/main.js: $(ELM_FILES)
 	elm make $(ELM_ENTRY) --yes --warn --output $@
+
+$(DIST_FOLDER)/main.min.js: $(BUILD_FOLDER)/main.js $(NODE_BIN_DIRECTORY)/uglifyjs
+	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- $(BUILD_FOLDER)/main.js
 
 $(BUILD_FOLDER)/interop.js: src/interop.js
 	cp $? $@
