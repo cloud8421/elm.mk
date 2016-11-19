@@ -125,7 +125,7 @@ $(BUILD_FOLDER)/main.css: styles/*.scss
 	bin/wt compile -b $(BUILD_FOLDER)/ styles/main.scss
 
 $(BUILD_FOLDER)/main.js: $(ELM_FILES)
-	elm make $(ELM_ENTRY) --yes --warn --output $@
+	elm make $(ELM_ENTRY) --yes --warn --debug --output $@
 
 $(BUILD_FOLDER)/interop.js: src/interop.js
 	cp $? $@
@@ -137,8 +137,12 @@ $(DIST_FOLDER)/main.min.css: styles/*.scss
 	bin/wt compile -s compressed -b $(DIST_FOLDER)/ styles/main.scss
 	mv $(DIST_FOLDER)/main.css $@
 
-$(DIST_FOLDER)/main.min.js: $(BUILD_FOLDER)/main.js $(NODE_BIN_DIRECTORY)/uglifyjs
+$(DIST_FOLDER)/main.js: $(ELM_FILES)
+	elm make $(ELM_ENTRY) --yes --warn --output $@
+
+$(DIST_FOLDER)/main.min.js: $(DIST_FOLDER)/main.js $(NODE_BIN_DIRECTORY)/uglifyjs
 	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- $(BUILD_FOLDER)/main.js
+	rm $(DIST_FOLDER)/main.js
 
 $(DIST_FOLDER)/interop.min.js: $(BUILD_FOLDER)/interop.js $(NODE_BIN_DIRECTORY)/uglifyjs
 	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- $(BUILD_FOLDER)/interop.js
