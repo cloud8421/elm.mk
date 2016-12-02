@@ -5,7 +5,7 @@ NODE_BIN_DIRECTORY = node_modules/.bin
 DEVD_VERSION = 0.6
 WELLINGTON_VERSION = 1.0.4
 MODD_VERSION = 0.4
-ELM_TEST_VERSION = 0.17.3
+ELM_TEST_VERSION = 0.18.2
 UGLIFY_JS_VERSION = 2.7.4
 OS := $(shell uname)
 BUILD_FOLDER = build
@@ -125,7 +125,7 @@ $(BUILD_FOLDER)/main.css: styles/*.scss
 	bin/wt compile -b $(BUILD_FOLDER)/ styles/main.scss
 
 $(BUILD_FOLDER)/main.js: $(ELM_FILES)
-	elm make $(ELM_ENTRY) --yes --warn --output $@
+	elm make $(ELM_ENTRY) --yes --warn --debug --output $@
 
 $(BUILD_FOLDER)/interop.js: src/interop.js
 	cp $? $@
@@ -137,8 +137,12 @@ $(DIST_FOLDER)/main.min.css: styles/*.scss
 	bin/wt compile -s compressed -b $(DIST_FOLDER)/ styles/main.scss
 	mv $(DIST_FOLDER)/main.css $@
 
-$(DIST_FOLDER)/main.min.js: $(BUILD_FOLDER)/main.js $(NODE_BIN_DIRECTORY)/uglifyjs
+$(DIST_FOLDER)/main.js: $(ELM_FILES)
+	elm make $(ELM_ENTRY) --yes --warn --output $@
+
+$(DIST_FOLDER)/main.min.js: $(DIST_FOLDER)/main.js $(NODE_BIN_DIRECTORY)/uglifyjs
 	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- $(BUILD_FOLDER)/main.js
+	rm $(DIST_FOLDER)/main.js
 
 $(DIST_FOLDER)/interop.min.js: $(BUILD_FOLDER)/interop.js $(NODE_BIN_DIRECTORY)/uglifyjs
 	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- $(BUILD_FOLDER)/interop.js
@@ -175,7 +179,6 @@ define main_elm
 module Main exposing (..)
 
 import Html exposing (div, text, Html)
-import Html.App as Html
 import Platform.Sub as Sub
 
 
@@ -210,7 +213,7 @@ subscriptions model =
     Sub.none
 
 
-main : Program Never
+main : Program Never Model Msg
 main =
     Html.program
         { init = ( model, Cmd.none )
@@ -233,11 +236,11 @@ define elm_package_json
     ],
     "exposed-modules": [],
     "dependencies": {
-        "elm-lang/core": "4.0.0 <= v < 5.0.0",
-        "elm-lang/html": "1.0.0 <= v < 2.0.0",
-        "evancz/elm-http": "3.0.1 <= v < 4.0.0"
+        "elm-lang/core": "5.0.0 <= v < 6.0.0",
+        "elm-lang/html": "2.0.0 <= v < 3.0.0",
+        "elm-lang/http": "1.0.0 <= v < 2.0.0"
     },
-    "elm-version": "0.17.0 <= v < 0.18.0"
+    "elm-version": "0.18.0 <= v < 0.19.0"
 }
 endef
 export elm_package_json
