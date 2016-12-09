@@ -2,7 +2,7 @@
 ELM_ENTRY = src/Main.elm
 ELM_FILES = $(shell find src -type f -name '*.elm')
 NODE_BIN_DIRECTORY = node_modules/.bin
-DEVD_VERSION = 0.6
+DEVD_VERSION = 0.7
 WELLINGTON_VERSION = 1.0.4
 MODD_VERSION = 0.4
 ELM_TEST_VERSION = 0.18.2
@@ -31,7 +31,7 @@ DIST_TARGETS = $(DIST_FOLDER) \
 							 $(DIST_FOLDER)/main.min.css \
 							 $(DIST_FOLDER)/index.html
 TEST_TARGETS = $(NODE_BIN_DIRECTORY)/elm-test tests/Main.elm
-SERVER_OPTS = -w $(BUILD_FOLDER) -l $(BUILD_FOLDER)/ $(CUSTOM_SERVER_OPTS)
+SERVER_OPTS = -w $(BUILD_FOLDER) -l $(BUILD_FOLDER)/ -f /index.html $(CUSTOM_SERVER_OPTS)
 
 MO_URL = "https://raw.githubusercontent.com/tests-always-included/mo/master/mo"
 ifeq ($(OS),Darwin)
