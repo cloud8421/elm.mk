@@ -13,7 +13,7 @@ DIST_FOLDER = dist
 INSTALL_TARGETS = src bin $(BUILD_FOLDER) \
 									Makefile \
 									elm-package.json \
-									src/Main.elm src/Types.elm \
+									src/Main.elm src/State.elm src/Types.elm \
 									src/interop.js styles/main.scss index.html \
 									bin/modd modd.conf \
 									bin/devd bin/wt \
@@ -78,6 +78,9 @@ styles/main.scss: styles
 
 src/Main.elm: src
 	test -s $@ || echo "$$main_elm" > $@
+
+src/State.elm: src
+	test -s $@ || echo "$$state_elm" > $@
 
 src/Types.elm: src
 	test -s $@ || echo "$$types_elm" > $@
@@ -192,30 +195,35 @@ type alias Model =
 endef
 export types_elm
 
+define state_elm
+module State exposing (..)
+
+import Types exposing (..)
+
+init : ( Model, Cmd Msg )
+init = 0 ! []
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        NoOp -> model ! []
+endef
+export state_elm
+
 define main_elm
 module Main exposing (..)
 
 import Html exposing (div, text, Html)
 import Platform.Sub as Sub
 import Types exposing (..)
-
-
-model : Model
-model =
-    0
+import State
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ model |> toString |> text ]
-
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case msg of
-        NoOp ->
-            ( model, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -226,9 +234,9 @@ subscriptions model =
 main : Program Never Model Msg
 main =
     Html.program
-        { init = ( model, Cmd.none )
+        { init = State.init
         , view = view
-        , update = update
+        , update = State.update
         , subscriptions = subscriptions
         }
 endef
