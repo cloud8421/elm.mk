@@ -13,7 +13,8 @@ DIST_FOLDER = dist
 INSTALL_TARGETS = src bin $(BUILD_FOLDER) \
 									Makefile \
 									elm-package.json \
-									src/Main.elm src/interop.js styles/main.scss index.html \
+									src/Main.elm src/Types.elm \
+									src/interop.js styles/main.scss index.html \
 									bin/modd modd.conf \
 									bin/devd bin/wt \
 									bin/mo \
@@ -77,6 +78,9 @@ styles/main.scss: styles
 
 src/Main.elm: src
 	test -s $@ || echo "$$main_elm" > $@
+
+src/Types.elm: src
+	test -s $@ || echo "$$types_elm" > $@
 
 src/interop.js: src
 	test -s $@ || echo "$$interop_js" > $@
@@ -175,11 +179,8 @@ $(BUILD_FOLDER)/** {
 endef
 export modd_config
 
-define main_elm
-module Main exposing (..)
-
-import Html exposing (div, text, Html)
-import Platform.Sub as Sub
+define types_elm
+module Types exposing (..)
 
 
 type Msg
@@ -188,6 +189,15 @@ type Msg
 
 type alias Model =
     Int
+endef
+export types_elm
+
+define main_elm
+module Main exposing (..)
+
+import Html exposing (div, text, Html)
+import Platform.Sub as Sub
+import Types exposing (..)
 
 
 model : Model
