@@ -13,7 +13,7 @@ DIST_FOLDER = dist
 INSTALL_TARGETS = src bin $(BUILD_FOLDER) \
 									Makefile \
 									elm-package.json \
-									src/Main.elm src/State.elm src/Types.elm \
+									src/Main.elm src/State.elm src/Types.elm src/View.elm \
 									src/interop.js styles/main.scss index.html \
 									bin/modd modd.conf \
 									bin/devd bin/wt \
@@ -84,6 +84,9 @@ src/State.elm: src
 
 src/Types.elm: src
 	test -s $@ || echo "$$types_elm" > $@
+
+src/View.elm: src
+	test -s $@ || echo "$$view_elm" > $@
 
 src/interop.js: src
 	test -s $@ || echo "$$interop_js" > $@
@@ -211,19 +214,28 @@ update msg model =
 endef
 export state_elm
 
+define view_elm
+module View exposing (..)
+
+import Html exposing (div, text, Html)
+import Types exposing (..)
+
+
+root : Model -> Html Msg
+root model =
+    div []
+        [ model |> toString |> text ]
+endef
+export view_elm
+
 define main_elm
 module Main exposing (..)
 
-import Html exposing (div, text, Html)
+import Html
 import Platform.Sub as Sub
 import Types exposing (..)
 import State
-
-
-view : Model -> Html Msg
-view model =
-    div []
-        [ model |> toString |> text ]
+import View
 
 
 subscriptions : Model -> Sub Msg
@@ -235,7 +247,7 @@ main : Program Never Model Msg
 main =
     Html.program
         { init = State.init
-        , view = view
+        , view = View.root
         , update = State.update
         , subscriptions = subscriptions
         }
