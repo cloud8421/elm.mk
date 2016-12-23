@@ -13,7 +13,8 @@ DIST_FOLDER = dist
 INSTALL_TARGETS = src bin $(BUILD_FOLDER) \
 									Makefile \
 									elm-package.json \
-									src/Main.elm src/interop.js styles/main.scss index.html \
+									src/Main.elm src/State.elm src/Types.elm src/View.elm \
+									src/interop.js styles/main.scss index.html \
 									bin/modd modd.conf \
 									bin/devd bin/wt \
 									bin/mo \
@@ -77,6 +78,15 @@ styles/main.scss: styles
 
 src/Main.elm: src
 	test -s $@ || echo "$$main_elm" > $@
+
+src/State.elm: src
+	test -s $@ || echo "$$state_elm" > $@
+
+src/Types.elm: src
+	test -s $@ || echo "$$types_elm" > $@
+
+src/View.elm: src
+	test -s $@ || echo "$$view_elm" > $@
 
 src/interop.js: src
 	test -s $@ || echo "$$interop_js" > $@
@@ -175,11 +185,8 @@ $(BUILD_FOLDER)/** {
 endef
 export modd_config
 
-define main_elm
-module Main exposing (..)
-
-import Html exposing (div, text, Html)
-import Platform.Sub as Sub
+define types_elm
+module Types exposing (..)
 
 
 type Msg
@@ -188,24 +195,47 @@ type Msg
 
 type alias Model =
     Int
+endef
+export types_elm
 
+define state_elm
+module State exposing (..)
 
-model : Model
-model =
-    0
+import Types exposing (..)
 
-
-view : Model -> Html Msg
-view model =
-    div []
-        [ model |> toString |> text ]
+init : ( Model, Cmd Msg )
+init = 0 ! []
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        NoOp ->
-            ( model, Cmd.none )
+        NoOp -> model ! []
+endef
+export state_elm
+
+define view_elm
+module View exposing (..)
+
+import Html exposing (div, text, Html)
+import Types exposing (..)
+
+
+root : Model -> Html Msg
+root model =
+    div []
+        [ model |> toString |> text ]
+endef
+export view_elm
+
+define main_elm
+module Main exposing (..)
+
+import Html
+import Platform.Sub as Sub
+import Types exposing (..)
+import State
+import View
 
 
 subscriptions : Model -> Sub Msg
@@ -216,9 +246,9 @@ subscriptions model =
 main : Program Never Model Msg
 main =
     Html.program
-        { init = ( model, Cmd.none )
-        , view = view
-        , update = update
+        { init = State.init
+        , view = View.root
+        , update = State.update
         , subscriptions = subscriptions
         }
 endef
