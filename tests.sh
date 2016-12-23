@@ -16,7 +16,8 @@ function fileExists() {
 }
 
 files="bin/modd elm-package.json modd.conf \
-       index.html styles/main.scss src/interop.js src/Main.elm \
+       index.html styles/main.scss src/interop.js \
+       src/Main.elm src/Types.elm src/State.elm src/View.elm \
        build/index.html build/interop.js build/main.js build/main.css \
        dist/main.min.js dist/interop.min.js dist/main.min.css dist/index.html"
 
