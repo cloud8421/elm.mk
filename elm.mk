@@ -14,7 +14,7 @@ INSTALL_TARGETS = src bin $(BUILD_FOLDER) \
 									Makefile \
 									elm-package.json \
 									src/Main.elm src/State.elm src/Types.elm src/View.elm \
-									src/interop.js styles/main.scss index.html \
+									src/boot.js styles/main.scss index.html \
 									bin/modd modd.conf \
 									bin/devd bin/wt \
 									bin/mo \
@@ -24,11 +24,11 @@ COMPILE_TARGETS = $(BUILD_FOLDER) \
 									$(BUILD_FOLDER)/main.js \
 									$(BUILD_FOLDER)/main.css \
 									$(BUILD_FOLDER)/index.html \
-									$(BUILD_FOLDER)/interop.js \
+									$(BUILD_FOLDER)/boot.js \
 									$(CUSTOM_COMPILE_TARGETS)
 DIST_TARGETS = $(DIST_FOLDER) \
 							 $(DIST_FOLDER)/main.min.js \
-							 $(DIST_FOLDER)/interop.min.js \
+							 $(DIST_FOLDER)/boot.min.js \
 							 $(DIST_FOLDER)/main.min.css \
 							 $(DIST_FOLDER)/index.html
 TEST_TARGETS = $(NODE_BIN_DIRECTORY)/elm-test tests/Main.elm
@@ -88,8 +88,8 @@ src/Types.elm: src
 src/View.elm: src
 	test -s $@ || echo "$$view_elm" > $@
 
-src/interop.js: src
-	test -s $@ || echo "$$interop_js" > $@
+src/boot.js: src
+	test -s $@ || echo "$$boot_js" > $@
 
 tests/Main.elm:
 	$(NODE_BIN_DIRECTORY)/elm-test init --yes
@@ -137,11 +137,11 @@ $(BUILD_FOLDER)/main.css: styles/*.scss
 $(BUILD_FOLDER)/main.js: $(ELM_FILES)
 	elm make $(ELM_ENTRY) --yes --warn --debug --output $@
 
-$(BUILD_FOLDER)/interop.js: src/interop.js
+$(BUILD_FOLDER)/boot.js: src/boot.js
 	cp $? $@
 
 $(BUILD_FOLDER)/index.html: index.html
-	main_css=/main.css main_js=/main.js interop_js=/interop.js bin/mo index.html > $@
+	main_css=/main.css main_js=/main.js boot_js=/boot.js bin/mo index.html > $@
 
 $(DIST_FOLDER)/main.min.css: styles/*.scss
 	bin/wt compile -s compressed -b $(DIST_FOLDER)/ styles/main.scss
@@ -154,11 +154,11 @@ $(DIST_FOLDER)/main.min.js: $(DIST_FOLDER)/main.js $(NODE_BIN_DIRECTORY)/uglifyj
 	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- $(BUILD_FOLDER)/main.js
 	rm $(DIST_FOLDER)/main.js
 
-$(DIST_FOLDER)/interop.min.js: $(BUILD_FOLDER)/interop.js $(NODE_BIN_DIRECTORY)/uglifyjs
-	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- $(BUILD_FOLDER)/interop.js
+$(DIST_FOLDER)/boot.min.js: $(BUILD_FOLDER)/boot.js $(NODE_BIN_DIRECTORY)/uglifyjs
+	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- $(BUILD_FOLDER)/boot.js
 
 $(DIST_FOLDER)/index.html: index.html
-	main_css=/main.min.css main_js=/main.min.js interop_js=/interop.min.js bin/mo index.html > $@
+	main_css=/main.min.css main_js=/main.min.js boot_js=/boot.min.js bin/mo index.html > $@
 
 define Makefile
 
@@ -171,7 +171,7 @@ src/**/*.elm {
   prep: make $(BUILD_FOLDER)/main.js
 }
 src/**/*.js {
-  prep: make $(BUILD_FOLDER)/interop.js
+  prep: make $(BUILD_FOLDER)/boot.js
 }
 styles/**/*.scss {
   prep: make $(BUILD_FOLDER)/main.css
@@ -275,12 +275,12 @@ define elm_package_json
 endef
 export elm_package_json
 
-define interop_js
+define boot_js
 window.onload = function() {
   var app = Elm.Main.fullscreen();
 };
 endef
-export interop_js
+export boot_js
 
 define index_html
 <!DOCTYPE HTML>
@@ -293,7 +293,7 @@ define index_html
 <body>
 </body>
   <script type="text/javascript" src="{{main_js}}"></script>
-  <script type="text/javascript" src="{{interop_js}}"></script>
+  <script type="text/javascript" src="{{boot_js}}"></script>
 </html>
 endef
 export index_html

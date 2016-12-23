@@ -46,7 +46,7 @@ Some guidelines:
 - Files generated into `build` should not be edited manually
 - All other files can be modified
 - Source `.elm` files should be placed in `src`.
-- Use `src/interop.js` to start your Elm application and define all ports-related glue code with the external world. The file gets copied automatically to `build`.
+- Use `src/boot.js` to start your Elm application and define all ports-related glue code with the external world. The file gets copied automatically to `build`.
 - `styles/main.scss` is the stylesheet main file.
 - `index.html` gets copied the way it is into `build`
 
