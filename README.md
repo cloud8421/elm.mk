@@ -19,6 +19,7 @@ development environment. This means that it tries as much as possible to bundle 
 - [x] Live reload via [devd](https://github.com/cortesi/devd)
 - [x] File generators based on templates
 - [x] Support for unit testing (optional)
+- [x] Support for minified builds (experimental)
 
 ## Setup from scratch
 
@@ -35,7 +36,7 @@ Main commands:
 
 - `make install`: installs all needed dependencies
 - `make`: compiles the project into `build`
-- `make prod`: compresses compiled files in `dist` (only supports main js file for now)
+- `make prod`: compresses compiled files in `dist`
 - `make server`: serves the build folder with a local http server
 - `make watch`: starts the file watcher and the http server, recompiling files on save
 - `make clean`: deletes all compiled files
@@ -87,6 +88,10 @@ It's possible to add support for unit testing via <https://github.com/rtfeldman/
 To do that, it's enough to call `make test`, which will install the needed dependencies. Note that this requires Node to be installed.
 
 Calling `make test` again will rerun the test suite.
+
+## Production builds [Experimental]
+
+As mentioned above, running `make prod` will build and minify files for production via [UglifyJS 2](http://lisperator.net/uglifyjs/) and Wellington (i.e. css generated with compressed layout). While this seems to work fine, it's under testing to see if it holds for more complex builds than just a few files.
 
 ## FAQs/Comments
 
