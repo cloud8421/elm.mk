@@ -1,5 +1,7 @@
 # Elm.mk
 
+[![Build Status](https://travis-ci.org/cloud8421/elm.mk.svg?branch=travis)](https://travis-ci.org/cloud8421/elm.mk)
+
 A minimal Makefile to work on [Elm](http://elm-lang.org) projects that require external js and css. It requires
 a working Elm installation.
 
