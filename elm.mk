@@ -152,7 +152,7 @@ $(DIST_FOLDER)/main.js: $(ELM_FILES)
 	elm make $(ELM_ENTRY) --yes --warn --output $@
 
 $(DIST_FOLDER)/main.min.js: $(DIST_FOLDER)/main.js $(NODE_BIN_DIRECTORY)/uglifyjs
-	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- $(BUILD_FOLDER)/main.js
+	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- $(DIST_FOLDER)/main.js
 	rm $(DIST_FOLDER)/main.js
 
 $(DIST_FOLDER)/boot.min.js: $(BUILD_FOLDER)/boot.js $(NODE_BIN_DIRECTORY)/uglifyjs
