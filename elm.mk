@@ -30,7 +30,8 @@ DIST_TARGETS = $(DIST_FOLDER) \
 							 $(DIST_FOLDER)/main.min.js \
 							 $(DIST_FOLDER)/boot.min.js \
 							 $(DIST_FOLDER)/main.min.css \
-							 $(DIST_FOLDER)/index.html
+							 $(DIST_FOLDER)/index.html \
+							 $(CUSTOM_DIST_TARGETS)
 TEST_TARGETS = $(NODE_BIN_DIRECTORY)/elm-test tests/Main.elm
 SERVER_OPTS = -w $(BUILD_FOLDER) -l $(BUILD_FOLDER)/ -f /index.html $(CUSTOM_SERVER_OPTS)
 

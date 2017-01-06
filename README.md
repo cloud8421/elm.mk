@@ -83,6 +83,19 @@ build/home.html: home.html
   cp $< $@
 ```
 
+## Extending dist targets
+
+Dist targets represent the artifacts your project builds every time you run `make prod`.
+
+For example, if you want to add a second html page to the project, you can extend `CUSTOM_DIST_TARGETS`:
+
+```
+CUSTOM_DIST_TARGETS := dist/home.html
+
+dist/home.html: home.html
+  cp $< $@
+```
+
 ## Testing
 
 It's possible to add support for unit testing via <https://github.com/rtfeldman/node-elm-test>.
