@@ -155,8 +155,8 @@ $(DIST_FOLDER)/main.min.js: $(DIST_FOLDER)/main.js $(NODE_BIN_DIRECTORY)/uglifyj
 	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- $(DIST_FOLDER)/main.js
 	rm $(DIST_FOLDER)/main.js
 
-$(DIST_FOLDER)/boot.min.js: $(BUILD_FOLDER)/boot.js $(NODE_BIN_DIRECTORY)/uglifyjs
-	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- $(BUILD_FOLDER)/boot.js
+$(DIST_FOLDER)/boot.min.js: src/boot.js $(NODE_BIN_DIRECTORY)/uglifyjs
+	$(NODE_BIN_DIRECTORY)/uglifyjs --compress --mangle --output $@ -- src/boot.js
 
 $(DIST_FOLDER)/index.html: index.html
 	main_css=/main.min.css main_js=/main.min.js boot_js=/boot.min.js bin/mo index.html > $@
