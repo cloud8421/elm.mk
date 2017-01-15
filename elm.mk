@@ -1,6 +1,6 @@
 .PHONY: install server watch clean test help
 ELM_ENTRY = src/Main.elm
-ELM_FILES = $(shell find src -type f -name '*.elm')
+ELM_FILES = $(shell find src -type f -name '*.elm' 2>/dev/null)
 NODE_BIN_DIRECTORY = node_modules/.bin
 DEVD_VERSION = 0.7
 WELLINGTON_VERSION = 1.0.4
