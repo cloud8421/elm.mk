@@ -80,22 +80,22 @@ $(BUILD_FOLDER) $(BUILD_FOLDER)/images $(DIST_FOLDER) $(DIST_FOLDER)/images bin 
 	mkdir -p $@
 
 Makefile:
-	test -s $@ || echo "$$Makefile" > $@
+	@test -s $@ || echo "$$Makefile" > $@
 
 styles/main.scss: styles
-	test -s $@ || touch $@
+	@test -s $@ || touch $@
 
 src/Main.elm: src
-	test -s $@ || echo "$$main_elm" > $@
+	@test -s $@ || echo "$$main_elm" > $@
 
 src/State.elm: src
-	test -s $@ || echo "$$state_elm" > $@
+	@test -s $@ || echo "$$state_elm" > $@
 
 src/Types.elm: src
-	test -s $@ || echo "$$types_elm" > $@
+	@test -s $@ || echo "$$types_elm" > $@
 
 src/View.elm: src
-	test -s $@ || echo "$$view_elm" > $@
+	@test -s $@ || echo "$$view_elm" > $@
 
 src/boot.js: src
 	@test -s $@ || echo "$$boot_js" > $@
