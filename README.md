@@ -18,6 +18,7 @@ development environment. This means that it tries as much as possible to bundle 
 - [x] Elm compilation with warnings
 - [x] Scss compilation via [Wellington](https://github.com/wellington/wellington)
 - [x] Watch and recompile via [modd](https://github.com/cortesi/modd)
+- [x] Images (without optimization)
 - [x] Live reload via [devd](https://github.com/cortesi/devd)
 - [x] File generators based on templates
 - [x] Support for unit testing (optional)
@@ -52,6 +53,7 @@ Some guidelines:
 - Use `src/boot.js` to start your Elm application and define all ports-related glue code with the external world. The file gets copied automatically to `build`.
 - `styles/main.scss` is the stylesheet main file.
 - `index.html` gets copied the way it is into `build`
+- All images can be placed in `images/`, they will be automatically copied to `build/images`
 
 It may also be worth checking out the documentation for the software used in this boilerplate (like Devd or Modd), as they provide functionality that it's not covered here.
 
