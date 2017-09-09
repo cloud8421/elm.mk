@@ -10,18 +10,17 @@ UGLIFY_JS_VERSION = 2.7.4
 OS := $(shell uname)
 BUILD_FOLDER = build
 DIST_FOLDER = dist
-INSTALL_TARGETS = src bin $(BUILD_FOLDER) \
-									$(BUILD_FOLDER)/images \
-									Makefile \
-									elm-package.json \
-									src/Main.elm src/State.elm src/Types.elm src/View.elm \
-									src/boot.js styles/main.scss index.html \
-									images \
-									bin/modd modd.conf \
-									bin/devd bin/wt \
-									bin/mo \
-									.gitignore \
-									$(CUSTOM_INSTALL_TARGETS)
+INSTALL_TARGETS = src bin \
+							Makefile \
+							elm-package.json \
+							src/Main.elm src/State.elm src/Types.elm src/View.elm \
+							src/boot.js styles/main.scss index.html \
+							images \
+							bin/modd modd.conf \
+							bin/devd bin/wt \
+							bin/mo \
+							.gitignore \
+							$(CUSTOM_INSTALL_TARGETS)
 COMPILE_TARGETS = $(BUILD_FOLDER) \
 									$(BUILD_FOLDER)/main.js \
 									$(BUILD_FOLDER)/main.css \
