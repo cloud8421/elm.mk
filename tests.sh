@@ -19,7 +19,7 @@ files="bin/modd elm-package.json modd.conf \
        index.html styles/main.scss src/boot.js \
        src/Main.elm src/Types.elm src/State.elm src/View.elm \
        build/index.html build/boot.js build/main.js build/main.css \
-       build/images/test.jpg build/images/test.png \
+       build/images/test.jpg build/images/test.png build/images/test.svg \
        dist/main.min.js dist/boot.min.js dist/main.min.css dist/index.html"
 
 for file in $files

@@ -5,6 +5,7 @@ test: dummy
 	cd dummy && $(MAKE) -f elm.mk install
 	touch dummy/images/test.jpg
 	touch dummy/images/test.png
+	touch dummy/images/test.svg
 	cd dummy && $(MAKE) && $(MAKE) prod
 	./tests.sh
 	rm -r dummy

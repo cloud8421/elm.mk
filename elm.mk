@@ -28,11 +28,13 @@ COMPILE_TARGETS = $(BUILD_FOLDER) \
 									$(BUILD_FOLDER)/boot.js \
 									$(BUILD_FOLDER)/images/*.jpg \
 									$(BUILD_FOLDER)/images/*.png \
+									$(BUILD_FOLDER)/images/*.svg \
 									$(BUILD_FOLDER)/images/*.ico \
 									$(CUSTOM_COMPILE_TARGETS)
 DIST_TARGETS = $(DIST_FOLDER) \
 							 $(DIST_FOLDER)/images/*.jpg \
 							 $(DIST_FOLDER)/images/*.png \
+							 $(DIST_FOLDER)/images/*.svg \
 							 $(DIST_FOLDER)/images/*.ico \
 							 $(DIST_FOLDER)/main.min.js \
 							 $(DIST_FOLDER)/boot.min.js \
@@ -171,7 +173,7 @@ $(BUILD_FOLDER)/boot.js: src/boot.js
 $(BUILD_FOLDER)/index.html: index.html
 	main_css=/main.css main_js=/main.js boot_js=/boot.js bin/mo index.html > $@
 
-$(BUILD_FOLDER)/images/%.jpg $(BUILD_FOLDER)/images/%.png $(BUILD_FOLDER)/images/%.ico:
+$(BUILD_FOLDER)/images/%.jpg $(BUILD_FOLDER)/images/%.png $(BUILD_FOLDER)/images/%.svg $(BUILD_FOLDER)/images/%.ico:
 	@cp -r images/ $(BUILD_FOLDER)/images/
 
 $(DIST_FOLDER)/main.min.css: styles/*.scss
@@ -191,7 +193,7 @@ $(DIST_FOLDER)/boot.min.js: src/boot.js $(NODE_BIN_DIRECTORY)/uglifyjs
 $(DIST_FOLDER)/index.html: index.html
 	main_css=/main.min.css main_js=/main.min.js boot_js=/boot.min.js bin/mo index.html > $@
 
-$(DIST_FOLDER)/images/%.jpg $(DIST_FOLDER)/images/%.png $(DIST_FOLDER)/images/%.ico:
+$(DIST_FOLDER)/images/%.jpg $(DIST_FOLDER)/images/%.png $(DIST_FOLDER)/images/%.svg $(DIST_FOLDER)/images/%.ico:
 	@cp -r images/ $(DIST_FOLDER)/images/
 
 define Makefile
