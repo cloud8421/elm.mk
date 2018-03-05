@@ -19,4 +19,4 @@ repl: $(ELM)
 # SUPPORT TARGETS
 
 $(ELM):
-	npm install --no-save elm@${ELM_VERSION}
+	@npm install --silent --no-save elm@${ELM_VERSION}
