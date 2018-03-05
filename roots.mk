@@ -1,11 +1,11 @@
 # GENERAL PLUMBING
 
-NPM_BIN = ./node_modules/.bin
+NPM_BIN := ./node_modules/.bin
 
 # ELM COMPILER
 
-ELM_VERSION = 0.18
-ELM = $(NPM_BIN)/elm
+ELM_VERSION := 0.18
+ELM := $(NPM_BIN)/elm
 
 # MAIN TARGETS
 
