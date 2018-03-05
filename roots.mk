@@ -10,5 +10,9 @@ ELM = $(NPM_BIN)/elm
 all: $(ELM)
 .PHONY: all
 
+repl: $(ELM)
+	$(ELM) repl
+.PHONY: repl
+
 $(ELM):
 	npm install --no-save elm@${ELM_VERSION}
