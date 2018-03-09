@@ -32,7 +32,8 @@ ELM := $(NPM_BIN)/elm
 # MAIN TARGETS
 
 COMPILE_TARGETS := $(ELM) \
-	elm-package.json
+	elm-package.json \
+	.gitignore
 
 all: $(COMPILE_TARGETS) ##@Main Compiles entire project
 .PHONY: all
@@ -49,6 +50,9 @@ repl: $(ELM) ##@Main Opens an Elm repl session
 
 $(ELM):
 	@npm install --silent --no-save elm@${ELM_VERSION}
+
+.gitignore:
+	$(call lazy_tpl,"$$gitignore")
 
 elm-package.json:
 	$(call lazy_tpl,"$$elm_package_json")
@@ -80,3 +84,10 @@ define elm_package_json
 }
 endef
 export elm_package_json
+
+define gitignore
+node_modules
+elm-stuff
+elm.js
+endef
+export gitignore
