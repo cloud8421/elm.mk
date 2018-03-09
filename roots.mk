@@ -11,11 +11,11 @@ RESET  := $(shell tput -Txterm sgr0)
 
 # SUPPORT
 
-HELP_FUN = \
 lazy_tpl = @test -s $@ || echo $1 > $@ # renders a template for the target unless file is there already
+help_fun = \
 					 %help; \
 					 while(<>) { push @{$$help{$$2 // 'options'}}, [$$1, $$3] if /^([a-zA-Z\-]+)\s*:.*\#\#(?:@([a-zA-Z\-]+))?\s(.*)$$/ }; \
-					 print "usage: make [target]\n\n"; \
+					 print "${help_text}"; \
 					 for (sort keys %help) { \
 					 print "${WHITE}$$_:${RESET}\n"; \
 					 for (@{$$help{$$_}}) { \
@@ -34,14 +34,14 @@ ELM := $(NPM_BIN)/elm
 COMPILE_TARGETS := $(ELM) \
 	elm-package.json
 
-all: $(COMPILE_TARGETS) ##@main Compiles entire project
+all: $(COMPILE_TARGETS) ##@Main Compiles entire project
 .PHONY: all
 
-help: ##@other Displays this help text
-	@perl -e '$(HELP_FUN)' $(MAKEFILE_LIST)
+help: ##@Other Displays this help text
+	@perl -e '$(help_fun)' $(MAKEFILE_LIST)
 .PHONY: help
 
-repl: $(ELM) ##@main Opens an Elm repl session
+repl: $(ELM) ##@Main Opens an Elm repl session
 	$(ELM) repl
 .PHONY: repl
 
@@ -54,6 +54,11 @@ elm-package.json:
 	$(call lazy_tpl,"$$elm_package_json")
 
 # TEMPLATES
+
+define help_text
+Roots - a simple toolchain for Elm projects\n\nAvailable tasks:\n\n
+endef
+export help_text
 
 define elm_package_json
 {
