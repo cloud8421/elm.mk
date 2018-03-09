@@ -12,6 +12,7 @@ RESET  := $(shell tput -Txterm sgr0)
 # SUPPORT
 
 HELP_FUN = \
+lazy_tpl = @test -s $@ || echo $1 > $@ # renders a template for the target unless file is there already
 					 %help; \
 					 while(<>) { push @{$$help{$$2 // 'options'}}, [$$1, $$3] if /^([a-zA-Z\-]+)\s*:.*\#\#(?:@([a-zA-Z\-]+))?\s(.*)$$/ }; \
 					 print "usage: make [target]\n\n"; \
@@ -50,7 +51,7 @@ $(ELM):
 	@npm install --silent --no-save elm@${ELM_VERSION}
 
 elm-package.json:
-	@test -s $@ || echo "$$elm_package_json" > $@
+	$(call lazy_tpl,"$$elm_package_json")
 
 # TEMPLATES
 
