@@ -50,9 +50,11 @@ APPLICATION_TARGETS := index.html \
 	$(ELM_SRC)/Types.elm \
 	$(ELM_SRC)/State.elm \
 	$(ELM_SRC)/View.elm \
-	$(ELM_SRC)/Main.elm
+	$(ELM_SRC)/Main.elm \
+	boot.js
 
 BUILD_TARGETS := $(BUILD)/main.js \
+								 $(BUILD)/boot.js \
 								 $(BUILD)/index.html
 
 COMPILE_TARGETS := $(TOOL_TARGETS) $(SUPPORT_TARGETS) $(APPLICATION_TARGETS) $(BUILD_TARGETS)
@@ -111,16 +113,22 @@ $(ELM_SRC)/View.elm: $(ELM_SRC)
 $(ELM_SRC)/Main.elm: $(ELM_SRC)
 	$(call lazy_tpl,"$$elm_main")
 
+boot.js:
+	$(call lazy_tpl,"$$boot_js")
+
 # BUILD TARGETS
 
 $(BUILD):
 	mkdir -p $@
 
 $(BUILD)/index.html: $(BUILD) index.html
-	main_js=/main.js $(MO) index.html > $@
+	main_js=/main.js boot_js=/boot.js $(MO) index.html > $@
 
 $(BUILD)/main.js: $(BUILD) $(ELM_SRC_FILES)
 	$(ELM)-make $(ELM_SRC)/Main.elm --yes --warn --output $@
+
+$(BUILD)/boot.js: boot.js $(BUILD)
+	cp $< $@
 
 # TEMPLATES
 
@@ -170,9 +178,12 @@ define index_html
   <title>Elm Project</title>
 </head>
 <body>
-  <h1>Loading...</h1>
+  <main id="app">
+    <h1>Loading...</h1>
+  </main>
 </body>
 <script type="text/javascript" src="{{main_js}}"></script>
+<script type="text/javascript" src="{{boot_js}}"></script>
 </html>
 endef
 export index_html
@@ -252,3 +263,11 @@ main =
 
 endef
 export elm_main
+
+define boot_js
+window.onload = function() {
+	var container = document.getElementById("app");
+  Elm.Main.embed(container);
+};
+endef
+export boot_js

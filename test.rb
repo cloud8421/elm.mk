@@ -83,6 +83,9 @@ describe "Roots test" do
       contents
         .find { |l| l.include? "/main.js" }
         .wont_be_nil
+      contents
+        .find { |l| l.include? "/boot.js" }
+        .wont_be_nil
     end
 
     it "build/main.js" do
@@ -91,6 +94,17 @@ describe "Roots test" do
         .entries
 
       contents.wont_be_empty
+    end
+
+    it "build/boot.js" do
+      contents = File.open("dummy/build/boot.js")
+        .map(&:strip)
+        .entries
+
+      contents.wont_be_empty
+      contents
+        .find { |l| l.include? "Elm.Main.embed" }
+        .wont_be_nil
     end
   end
 end
