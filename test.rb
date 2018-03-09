@@ -5,11 +5,18 @@ require 'minitest/pride'
 describe "Roots test" do
   system("make dummy")
 
-  describe "support targets" do
+  describe "tool targets" do
     it "elm" do
       File.exist?("dummy/node_modules/.bin/elm").must_equal true
     end
 
+    it "bin/mo" do
+      File.exist?("dummy/bin/mo").must_equal true
+      File.executable?("dummy/bin/mo").must_equal true
+    end
+  end
+
+  describe "support targets" do
     it ".gitignore" do
       contents = File.open("dummy/.gitignore")
         .map(&:strip)

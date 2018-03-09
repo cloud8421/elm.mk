@@ -1,5 +1,6 @@
 # GENERAL PLUMBING
 
+BIN := ./bin
 NPM_BIN := ./node_modules/.bin
 
 # COLORS
@@ -24,6 +25,11 @@ help_fun = \
 					 }; \
 					 print "\n"; }
 
+# MUSTACHE TEMPLATES
+
+MO := $(BIN)/mo
+MO_URL := "https://raw.githubusercontent.com/tests-always-included/mo/master/mo"
+
 # ELM COMPILER
 
 ELM_VERSION := 0.18
@@ -35,7 +41,9 @@ SUPPORT_TARGETS := Makefile \
 	.gitignore \
 	elm-package.json
 
-COMPILE_TARGETS := $(ELM) $(SUPPORT_TARGETS)
+TOOL_TARGETS := $(MO) $(ELM)
+
+COMPILE_TARGETS := $(TOOL_TARGETS) $(SUPPORT_TARGETS)
 
 all: $(COMPILE_TARGETS) ##@Main Compiles entire project
 .PHONY: all
@@ -48,10 +56,19 @@ repl: $(ELM) ##@Main Opens an Elm repl session
 	$(ELM) repl
 .PHONY: repl
 
-# SUPPORT TARGETS
+# TOOL TARGETS
+
+$(BIN):
+	mkdir -p $@
+
+$(MO): $(BIN)
+	curl $(MO_URL) -L -o $@
+	chmod +x $@
 
 $(ELM):
 	@npm install --silent --no-save elm@${ELM_VERSION}
+
+# SUPPORT TARGETS
 
 Makefile:
 	$(call lazy_tpl,"$$Makefile")
