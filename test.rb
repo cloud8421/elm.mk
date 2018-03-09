@@ -1,0 +1,44 @@
+require 'minitest/autorun'
+require 'minitest/spec'
+require 'minitest/pride'
+
+describe "Roots test" do
+  system("make dummy")
+
+  describe "support targets" do
+    it "elm" do
+      File.exist?("dummy/node_modules/.bin/elm").must_equal true
+    end
+
+    it ".gitignore" do
+      contents = File.open("dummy/.gitignore")
+        .map(&:strip)
+        .entries
+
+      contents.wont_be_empty
+      contents.must_include "elm-stuff"
+      contents.must_include "node_modules"
+      contents.must_include "elm.js"
+    end
+
+    it "Makefile" do
+      contents = File.open("dummy/Makefile")
+        .map(&:strip)
+        .entries
+
+      contents.wont_be_empty
+      contents.must_include "include roots.mk"
+    end
+
+    it "elm-package.json" do
+      contents = File.open("dummy/elm-package.json")
+        .map(&:strip)
+        .entries
+
+      contents.wont_be_empty
+      contents
+        .find { |l| l.include? "elm-lang/html" }
+        .wont_be_nil
+    end
+  end
+end
