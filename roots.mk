@@ -74,12 +74,12 @@ include roots.mk
 endef
 export Makefile
 
-define .gitignore
+define gitignore
 node_modules
 elm-stuff
 elm.js
 endef
-export .gitignore
+export gitignore
 
 define elm_package_json
 {
