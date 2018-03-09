@@ -16,9 +16,7 @@ describe "Roots test" do
 
   describe "support targets" do
     it ".gitignore" do
-      contents = File.open("dummy/.gitignore")
-        .map(&:strip)
-        .entries
+      contents = File.readlines_stripped("dummy/.gitignore")
 
       contents.wont_be_empty
       contents.must_include "elm-stuff"
@@ -27,84 +25,77 @@ describe "Roots test" do
     end
 
     it "Makefile" do
-      contents = File.open("dummy/Makefile")
-        .map(&:strip)
-        .entries
+      contents = File.readlines_stripped("dummy/Makefile")
 
       contents.wont_be_empty
       contents.must_include "include roots.mk"
     end
 
     it "elm-package.json" do
-      contents = File.open("dummy/elm-package.json")
-        .map(&:strip)
-        .entries
+      contents = File.readlines_stripped("dummy/elm-package.json")
 
       contents.wont_be_empty
-      contents
-        .find { |l| l.include? "elm-lang/html" }
-        .wont_be_nil
+      contents.must_have_at_least_one_matching(/elm-lang\/html/)
     end
   end
 
   describe "application targets" do
     it "index.html" do
-      contents = File.open("dummy/index.html")
-        .map(&:strip)
-        .entries
+      contents = File.readlines_stripped("dummy/index.html")
 
       contents.wont_be_empty
-      contents
-        .find { |l| l.include? "Loading..." }
-        .wont_be_nil
+      contents.must_have_at_least_one_matching(/Loading.../)
     end
 
     it "elm source files" do
       ["Main.elm", "Types.elm", "State.elm", "View.elm"].each do |file|
-        contents = File.open("dummy/src/#{file}")
-          .map(&:strip)
-          .entries
+        contents = File.readlines_stripped("dummy/src/#{file}")
 
         module_name = file.split(".").first
 
         contents.wont_be_empty
-        contents.first.include?("module #{module_name}").must_equal true
+        contents.first.must_include("module #{module_name}")
       end
     end
   end
 
   describe "build targets" do
     it "build/index.html" do
-      contents = File.open("dummy/build/index.html")
-        .map(&:strip)
-        .entries
+      contents = File.readlines_stripped("dummy/build/index.html")
 
       contents.wont_be_empty
-      contents
-        .find { |l| l.include? "/main.js" }
-        .wont_be_nil
-      contents
-        .find { |l| l.include? "/boot.js" }
-        .wont_be_nil
+      contents.must_have_at_least_one_matching(/\/main\.js/)
+      contents.must_have_at_least_one_matching(/\/boot\.js/)
     end
 
     it "build/main.js" do
-      contents = File.open("dummy/build/main.js")
-        .map(&:strip)
-        .entries
+      contents = File.readlines_stripped("dummy/build/main.js")
 
       contents.wont_be_empty
     end
 
     it "build/boot.js" do
-      contents = File.open("dummy/build/boot.js")
-        .map(&:strip)
-        .entries
+      contents = File.readlines_stripped("dummy/build/boot.js")
 
       contents.wont_be_empty
-      contents
-        .find { |l| l.include? "Elm.Main.embed" }
-        .wont_be_nil
+      contents.must_have_at_least_one_matching(/Elm\.Main\.embed/)
     end
   end
 end
+
+# Extensions and helpers
+
+class File
+  def self.readlines_stripped(filename)
+    readlines(filename).map(&:strip)
+  end
+end
+
+module MiniTest::Assertions
+  def assert_at_least_one_match(strings, matcher)
+    refute strings.grep(matcher).empty?, "Expected #{strings} to have at least one element matching #{matcher.inspect}"
+  end
+end
+
+Array.infect_an_assertion :assert_at_least_one_match, :must_have_at_least_one_matching, :do_not_flip
+
