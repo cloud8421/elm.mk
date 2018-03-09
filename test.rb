@@ -72,4 +72,25 @@ describe "Roots test" do
       end
     end
   end
+
+  describe "build targets" do
+    it "build/index.html" do
+      contents = File.open("dummy/build/index.html")
+        .map(&:strip)
+        .entries
+
+      contents.wont_be_empty
+      contents
+        .find { |l| l.include? "/main.js" }
+        .wont_be_nil
+    end
+
+    it "build/main.js" do
+      contents = File.open("dummy/build/main.js")
+        .map(&:strip)
+        .entries
+
+      contents.wont_be_empty
+    end
+  end
 end

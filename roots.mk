@@ -3,6 +3,8 @@
 BIN := ./bin
 NPM_BIN := ./node_modules/.bin
 ELM_SRC := ./src
+ELM_SRC_FILES = $(shell find $(ELM_SRC) -type f -name '*.elm' 2>/dev/null)
+BUILD := ./build
 
 # COLORS
 
@@ -50,7 +52,10 @@ APPLICATION_TARGETS := index.html \
 	$(ELM_SRC)/View.elm \
 	$(ELM_SRC)/Main.elm
 
-COMPILE_TARGETS := $(TOOL_TARGETS) $(SUPPORT_TARGETS) $(APPLICATION_TARGETS)
+BUILD_TARGETS := $(BUILD)/main.js \
+								 $(BUILD)/index.html
+
+COMPILE_TARGETS := $(TOOL_TARGETS) $(SUPPORT_TARGETS) $(APPLICATION_TARGETS) $(BUILD_TARGETS)
 
 all: $(COMPILE_TARGETS) ##@Main Compiles entire project
 .PHONY: all
@@ -106,6 +111,17 @@ $(ELM_SRC)/View.elm: $(ELM_SRC)
 $(ELM_SRC)/Main.elm: $(ELM_SRC)
 	$(call lazy_tpl,"$$elm_main")
 
+# BUILD TARGETS
+
+$(BUILD):
+	mkdir -p $@
+
+$(BUILD)/index.html: $(BUILD) index.html
+	main_js=/main.js $(MO) index.html > $@
+
+$(BUILD)/main.js: $(BUILD) $(ELM_SRC_FILES)
+	$(ELM)-make $(ELM_SRC)/Main.elm --yes --warn --output $@
+
 # TEMPLATES
 
 define help_text
@@ -156,6 +172,7 @@ define index_html
 <body>
   <h1>Loading...</h1>
 </body>
+<script type="text/javascript" src="{{main_js}}"></script>
 </html>
 endef
 export index_html
