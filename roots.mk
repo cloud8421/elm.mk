@@ -1,10 +1,11 @@
 # GENERAL PLUMBING
 
-BIN := ./bin
-NPM_BIN := ./node_modules/.bin
-ELM_SRC := ./src
+BIN := bin
+NPM_BIN := node_modules/.bin
+ELM_SRC := src
 ELM_SRC_FILES = $(shell find $(ELM_SRC) -type f -name '*.elm' 2>/dev/null)
-BUILD := ./build
+BUILD := build
+OS := $(shell uname)
 
 # COLORS
 
@@ -28,10 +29,28 @@ help_fun = \
 					 }; \
 					 print "\n"; }
 
-# MUSTACHE TEMPLATES
+# DEV TOOLS
 
 MO := $(BIN)/mo
+WT := $(BIN)/wt
+DEVD := $(BIN)/devd
+MODD := $(BIN)/modd
+
+DEVD_VERSION := 0.8
+WT_VERSION := 1.0.4
+MODD_VERSION := 0.5
+
 MO_URL := "https://raw.githubusercontent.com/tests-always-included/mo/master/mo"
+
+ifeq ($(OS),Darwin)
+	DEVD_URL := "https://github.com/cortesi/devd/releases/download/v${DEVD_VERSION}/devd-${DEVD_VERSION}-osx64.tgz"
+	WT_URL := "https://github.com/wellington/wellington/releases/download/v${WT_VERSION}/wt_v${WT_VERSION}_darwin_amd64.tar.gz"
+	MODD_URL := "https://github.com/cortesi/modd/releases/download/v${MODD_VERSION}/modd-${MODD_VERSION}-osx64.tgz"
+else
+	DEVD_URL := "https://github.com/cortesi/devd/releases/download/v${DEVD_VERSION}/devd-${DEVD_VERSION}-linux64.tgz"
+	WT_URL := "https://github.com/wellington/wellington/releases/download/v${WT_VERSION}/wt_v${WT_VERSION}_linux_amd64.tar.gz"
+	MODD_URL := "https://github.com/cortesi/modd/releases/download/v${MODD_VERSION}/modd-${MODD_VERSION}-linux64.tgz"
+endif
 
 # ELM COMPILER
 
@@ -44,7 +63,12 @@ SUPPORT_TARGETS := Makefile \
 	.gitignore \
 	elm-package.json
 
-TOOL_TARGETS := $(MO) $(ELM)
+TOOL_TARGETS := $(BIN) \
+	$(MO) \
+	$(DEVD) \
+	$(MODD) \
+	$(WT) \
+	$(ELM)
 
 APPLICATION_TARGETS := index.html \
 	$(ELM_SRC)/Types.elm \
@@ -75,9 +99,24 @@ repl: $(ELM) ##@Main Opens an Elm repl session
 $(BIN):
 	mkdir -p $@
 
-$(MO): $(BIN)
+$(MO):
 	curl $(MO_URL) -L -o $@
 	chmod +x $@
+
+$(DEVD):
+	curl ${DEVD_URL} -L -o $@.tgz
+	tar -xzf $@.tgz -C bin/ --strip 1
+	rm $@.tgz
+
+$(WT):
+	curl ${WT_URL} -L -o $@.tgz
+	tar -xzf $@.tgz -C bin/
+	rm $@.tgz
+
+$(MODD):
+	curl ${MODD_URL} -L -o $@.tgz
+	tar -xzf $@.tgz -C bin/ --strip 1
+	rm $@.tgz
 
 $(ELM):
 	@npm install --silent --no-save elm@${ELM_VERSION}

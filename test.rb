@@ -8,9 +8,11 @@ describe "Roots test" do
       File.exist?("dummy/node_modules/.bin/elm").must_equal true
     end
 
-    it "bin/mo" do
-      File.exist?("dummy/bin/mo").must_equal true
-      File.executable?("dummy/bin/mo").must_equal true
+    it "dev tools" do
+      ["bin/mo", "bin/wt", "bin/devd", "bin/modd"].each do |bin|
+        File.exist?("dummy/#{bin}").must_equal true
+        File.executable?("dummy/#{bin}").must_equal true
+      end
     end
   end
 
