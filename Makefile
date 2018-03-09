@@ -5,6 +5,6 @@ dummy:
 	cd dummy && $(MAKE) -f roots.mk && cd ..
 .PHONY: dummy
 
-test:
+test: dummy
 	ruby test.rb
 .PHONY: test

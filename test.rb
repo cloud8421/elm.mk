@@ -3,8 +3,6 @@ require 'minitest/spec'
 require 'minitest/pride'
 
 describe "Roots test" do
-  system("make dummy")
-
   describe "tool targets" do
     it "elm" do
       File.exist?("dummy/node_modules/.bin/elm").must_equal true
