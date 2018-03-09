@@ -31,9 +31,11 @@ ELM := $(NPM_BIN)/elm
 
 # MAIN TARGETS
 
-COMPILE_TARGETS := $(ELM) \
-	elm-package.json \
-	.gitignore
+SUPPORT_TARGETS := Makefile \
+	.gitignore \
+	elm-package.json
+
+COMPILE_TARGETS := $(ELM) $(SUPPORT_TARGETS)
 
 all: $(COMPILE_TARGETS) ##@Main Compiles entire project
 .PHONY: all
@@ -51,6 +53,9 @@ repl: $(ELM) ##@Main Opens an Elm repl session
 $(ELM):
 	@npm install --silent --no-save elm@${ELM_VERSION}
 
+Makefile:
+	$(call lazy_tpl,"$$Makefile")
+
 .gitignore:
 	$(call lazy_tpl,"$$gitignore")
 
@@ -63,6 +68,18 @@ define help_text
 Roots - a simple toolchain for Elm projects\n\nAvailable tasks:\n\n
 endef
 export help_text
+
+define Makefile
+include roots.mk
+endef
+export Makefile
+
+define .gitignore
+node_modules
+elm-stuff
+elm.js
+endef
+export .gitignore
 
 define elm_package_json
 {
@@ -84,10 +101,3 @@ define elm_package_json
 }
 endef
 export elm_package_json
-
-define gitignore
-node_modules
-elm-stuff
-elm.js
-endef
-export gitignore
