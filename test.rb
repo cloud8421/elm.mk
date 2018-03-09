@@ -46,4 +46,17 @@ describe "Roots test" do
         .wont_be_nil
     end
   end
+
+  describe "application targets" do
+    it "index.html" do
+      contents = File.open("dummy/index.html")
+        .map(&:strip)
+        .entries
+
+      contents.wont_be_empty
+      contents
+        .find { |l| l.include? "Loading..." }
+        .wont_be_nil
+    end
+  end
 end

@@ -43,7 +43,9 @@ SUPPORT_TARGETS := Makefile \
 
 TOOL_TARGETS := $(MO) $(ELM)
 
-COMPILE_TARGETS := $(TOOL_TARGETS) $(SUPPORT_TARGETS)
+APPLICATION_TARGETS := index.html
+
+COMPILE_TARGETS := $(TOOL_TARGETS) $(SUPPORT_TARGETS) $(APPLICATION_TARGETS)
 
 all: $(COMPILE_TARGETS) ##@Main Compiles entire project
 .PHONY: all
@@ -78,6 +80,11 @@ Makefile:
 
 elm-package.json:
 	$(call lazy_tpl,"$$elm_package_json")
+
+# APPLICATION TARGETS
+
+index.html:
+	$(call lazy_tpl,"$$index_html")
 
 # TEMPLATES
 
@@ -118,3 +125,17 @@ define elm_package_json
 }
 endef
 export elm_package_json
+
+define index_html
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Elm Project</title>
+</head>
+<body>
+  <h1>Loading...</h1>
+</body>
+</html>
+endef
+export index_html
