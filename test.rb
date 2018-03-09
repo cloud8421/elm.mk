@@ -58,5 +58,18 @@ describe "Roots test" do
         .find { |l| l.include? "Loading..." }
         .wont_be_nil
     end
+
+    it "elm source files" do
+      ["Main.elm", "Types.elm", "State.elm", "View.elm"].each do |file|
+        contents = File.open("dummy/src/#{file}")
+          .map(&:strip)
+          .entries
+
+        module_name = file.split(".").first
+
+        contents.wont_be_empty
+        contents.first.include?("module #{module_name}").must_equal true
+      end
+    end
   end
 end

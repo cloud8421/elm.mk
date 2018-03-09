@@ -2,6 +2,7 @@
 
 BIN := ./bin
 NPM_BIN := ./node_modules/.bin
+ELM_SRC := ./src
 
 # COLORS
 
@@ -43,7 +44,11 @@ SUPPORT_TARGETS := Makefile \
 
 TOOL_TARGETS := $(MO) $(ELM)
 
-APPLICATION_TARGETS := index.html
+APPLICATION_TARGETS := index.html \
+	$(ELM_SRC)/Types.elm \
+	$(ELM_SRC)/State.elm \
+	$(ELM_SRC)/View.elm \
+	$(ELM_SRC)/Main.elm
 
 COMPILE_TARGETS := $(TOOL_TARGETS) $(SUPPORT_TARGETS) $(APPLICATION_TARGETS)
 
@@ -83,8 +88,23 @@ elm-package.json:
 
 # APPLICATION TARGETS
 
+$(ELM_SRC):
+	mkdir -p $@
+
 index.html:
 	$(call lazy_tpl,"$$index_html")
+
+$(ELM_SRC)/Types.elm: $(ELM_SRC)
+	$(call lazy_tpl,"$$elm_types")
+
+$(ELM_SRC)/State.elm: $(ELM_SRC)
+	$(call lazy_tpl,"$$elm_state")
+
+$(ELM_SRC)/View.elm: $(ELM_SRC)
+	$(call lazy_tpl,"$$elm_view")
+
+$(ELM_SRC)/Main.elm: $(ELM_SRC)
+	$(call lazy_tpl,"$$elm_main")
 
 # TEMPLATES
 
@@ -139,3 +159,79 @@ define index_html
 </html>
 endef
 export index_html
+
+define elm_types
+module Types exposing (..)
+
+
+type Msg
+    = NoOp
+
+
+type alias Model =
+    Int
+
+endef
+export elm_types
+
+define elm_state
+module State exposing (..)
+
+import Types exposing (..)
+
+
+init : ( Model, Cmd Msg )
+init =
+    0 ! []
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        NoOp ->
+            model ! []
+
+endef
+export elm_state
+
+define elm_view
+module View exposing (..)
+
+import Html exposing (Html, div, text)
+import Types exposing (..)
+
+
+root : Model -> Html Msg
+root model =
+    div []
+        [ model |> toString |> text ]
+
+endef
+export elm_view
+
+define elm_main
+module Main exposing (..)
+
+import Html
+import Platform.Sub as Sub
+import State
+import Types exposing (..)
+import View
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.none
+
+
+main : Program Never Model Msg
+main =
+    Html.program
+        { init = State.init
+        , view = View.root
+        , update = State.update
+        , subscriptions = subscriptions
+        }
+
+endef
+export elm_main
