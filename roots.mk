@@ -57,6 +57,8 @@ else
 	WT_URL := "https://github.com/wellington/wellington/releases/download/v${WT_VERSION}/wt_v${WT_VERSION}_linux_amd64.tar.gz"
 endif
 
+DEVD_OPTIONS := -w $(BUILD) -l $(BUILD)/ -f /index.html
+
 # MAIN TARGETS
 
 SUPPORT_TARGETS := Makefile \
@@ -93,6 +95,10 @@ help: ##@Other Displays this help text
 repl: $(ELM) ##@Main Opens an Elm repl session
 	$(ELM) repl
 .PHONY: repl
+
+serve: $(COMPILE_TARGETS) ##@Main Serves build at http://localhost:8000
+	$(DEVD) $(DEVD_OPTIONS)
+.PHONY: serve
 
 # TOOL TARGETS
 
