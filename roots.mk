@@ -27,6 +27,7 @@ help_fun = \
 					 print "  ${YELLOW}$$_->[0]${RESET}$$sep${GREEN}$$_->[1]${RESET}\n"; \
 					 }; \
 					 print "\n"; }
+curl := curl --silent
 
 # DEV TOOLS
 
@@ -98,26 +99,26 @@ $(BIN):
 	mkdir -p $@
 
 $(DEVD):
-	curl ${DEVD_URL} -L -o $@.tgz
+	${curl} ${DEVD_URL} -L -o $@.tgz
 	tar -xzf $@.tgz -C bin/ --strip 1
 	rm $@.tgz
 
 $(ELM):
-	curl ${ELM_URL} -L -o $@.tgz
+	${curl} ${ELM_URL} -L -o $@.tgz
 	tar -xzf $@.tgz -C bin/ --strip 1
 	rm $@.tgz
 
 $(MO):
-	curl $(MO_URL) -L -o $@
+	${curl} $(MO_URL) -L -o $@
 	chmod +x $@
 
 $(MODD):
-	curl ${MODD_URL} -L -o $@.tgz
+	${curl} ${MODD_URL} -L -o $@.tgz
 	tar -xzf $@.tgz -C bin/ --strip 1
 	rm $@.tgz
 
 $(WT):
-	curl ${WT_URL} -L -o $@.tgz
+	${curl} ${WT_URL} -L -o $@.tgz
 	tar -xzf $@.tgz -C bin/
 	rm $@.tgz
 
