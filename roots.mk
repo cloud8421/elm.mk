@@ -160,7 +160,7 @@ boot.js:
 $(BUILD):
 	mkdir -p $@
 
-$(BUILD)/index.html: $(BUILD) index.html
+$(BUILD)/index.html: $(BUILD) index.html $(MO)
 	main_js=/main.js boot_js=/boot.js $(MO) index.html > $@
 
 $(BUILD)/main.js: $(BUILD) $(ELM_SRC_FILES)
