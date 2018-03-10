@@ -57,13 +57,14 @@ else
 	WT_URL := "https://github.com/wellington/wellington/releases/download/v${WT_VERSION}/wt_v${WT_VERSION}_linux_amd64.tar.gz"
 endif
 
-DEVD_OPTIONS := -w $(BUILD) -l $(BUILD)/ -f /index.html
+DEVD_OPTIONS := -m $(BUILD) -f /index.html
 
 # MAIN TARGETS
 
 SUPPORT_TARGETS := Makefile \
 	.gitignore \
-	elm-package.json
+	elm-package.json \
+	modd.conf
 
 TOOL_TARGETS := $(BIN) \
 	$(DEVD) \
@@ -99,6 +100,9 @@ repl: $(ELM) ##@Main Opens an Elm repl session
 serve: $(COMPILE_TARGETS) ##@Main Serves build at http://localhost:8000
 	$(DEVD) $(DEVD_OPTIONS)
 .PHONY: serve
+
+watch: $(COMPILE_TARGETS)
+	$(MODD)
 
 # TOOL TARGETS
 
@@ -139,6 +143,9 @@ Makefile:
 
 elm-package.json:
 	$(call lazy_tpl,"$$elm_package_json")
+
+modd.conf:
+	echo "$$modd_config" | build=$(BUILD) elm_src=$(ELM_SRC) $(MO) > $@
 
 # APPLICATION TARGETS
 
@@ -318,3 +325,19 @@ window.onload = function() {
 };
 endef
 export boot_js
+
+define modd_config
+{{elm_src}}/**/*.elm {
+  prep: make {{build}}/main.js
+}
+boot.js {
+  prep: make {{build}}/boot.js
+}
+index.html {
+  prep: make {{build}}/index.html
+}
+{{build}}/** {
+  daemon: $(DEVD) $(DEVD_OPTIONS)
+}
+endef
+export modd_config
