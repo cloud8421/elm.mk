@@ -30,29 +30,29 @@ help_fun = \
 
 # DEV TOOLS
 
+DEVD := $(BIN)/devd
 ELM := $(BIN)/elm
 MO := $(BIN)/mo
-WT := $(BIN)/wt
-DEVD := $(BIN)/devd
 MODD := $(BIN)/modd
+WT := $(BIN)/wt
 
-ELM_VERSION := 0.18.0
 DEVD_VERSION := 0.8
-WT_VERSION := 1.0.4
+ELM_VERSION := 0.18.0
 MODD_VERSION := 0.5
+WT_VERSION := 1.0.4
 
 MO_URL := "https://raw.githubusercontent.com/tests-always-included/mo/master/mo"
 
 ifeq ($(OS),Darwin)
-	ELM_URL := "https://dl.bintray.com/elmlang/elm-platform/${ELM_VERSION}/darwin-x64.tar.gz"
 	DEVD_URL := "https://github.com/cortesi/devd/releases/download/v${DEVD_VERSION}/devd-${DEVD_VERSION}-osx64.tgz"
-	WT_URL := "https://github.com/wellington/wellington/releases/download/v${WT_VERSION}/wt_v${WT_VERSION}_darwin_amd64.tar.gz"
+	ELM_URL := "https://dl.bintray.com/elmlang/elm-platform/${ELM_VERSION}/darwin-x64.tar.gz"
 	MODD_URL := "https://github.com/cortesi/modd/releases/download/v${MODD_VERSION}/modd-${MODD_VERSION}-osx64.tgz"
+	WT_URL := "https://github.com/wellington/wellington/releases/download/v${WT_VERSION}/wt_v${WT_VERSION}_darwin_amd64.tar.gz"
 else
-	ELM_URL := "https://dl.bintray.com/elmlang/elm-platform/${ELM_VERSION}/linux-x64.tar.gz"
 	DEVD_URL := "https://github.com/cortesi/devd/releases/download/v${DEVD_VERSION}/devd-${DEVD_VERSION}-linux64.tgz"
-	WT_URL := "https://github.com/wellington/wellington/releases/download/v${WT_VERSION}/wt_v${WT_VERSION}_linux_amd64.tar.gz"
+	ELM_URL := "https://dl.bintray.com/elmlang/elm-platform/${ELM_VERSION}/linux-x64.tar.gz"
 	MODD_URL := "https://github.com/cortesi/modd/releases/download/v${MODD_VERSION}/modd-${MODD_VERSION}-linux64.tgz"
+	WT_URL := "https://github.com/wellington/wellington/releases/download/v${WT_VERSION}/wt_v${WT_VERSION}_linux_amd64.tar.gz"
 endif
 
 # MAIN TARGETS
@@ -62,11 +62,11 @@ SUPPORT_TARGETS := Makefile \
 	elm-package.json
 
 TOOL_TARGETS := $(BIN) \
-	$(MO) \
 	$(DEVD) \
+	$(ELM) \
+	$(MO) \
 	$(MODD) \
-	$(WT) \
-	$(ELM)
+	$(WT)
 
 APPLICATION_TARGETS := index.html \
 	$(ELM_SRC)/Types.elm \
@@ -97,28 +97,28 @@ repl: $(ELM) ##@Main Opens an Elm repl session
 $(BIN):
 	mkdir -p $@
 
-$(MO):
-	curl $(MO_URL) -L -o $@
-	chmod +x $@
-
 $(DEVD):
 	curl ${DEVD_URL} -L -o $@.tgz
-	tar -xzf $@.tgz -C bin/ --strip 1
-	rm $@.tgz
-
-$(WT):
-	curl ${WT_URL} -L -o $@.tgz
-	tar -xzf $@.tgz -C bin/
-	rm $@.tgz
-
-$(MODD):
-	curl ${MODD_URL} -L -o $@.tgz
 	tar -xzf $@.tgz -C bin/ --strip 1
 	rm $@.tgz
 
 $(ELM):
 	curl ${ELM_URL} -L -o $@.tgz
 	tar -xzf $@.tgz -C bin/ --strip 1
+	rm $@.tgz
+
+$(MO):
+	curl $(MO_URL) -L -o $@
+	chmod +x $@
+
+$(MODD):
+	curl ${MODD_URL} -L -o $@.tgz
+	tar -xzf $@.tgz -C bin/ --strip 1
+	rm $@.tgz
+
+$(WT):
+	curl ${WT_URL} -L -o $@.tgz
+	tar -xzf $@.tgz -C bin/
 	rm $@.tgz
 
 # SUPPORT TARGETS
