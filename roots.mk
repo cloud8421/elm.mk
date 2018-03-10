@@ -163,7 +163,7 @@ $(BUILD):
 $(BUILD)/index.html: $(BUILD) index.html $(MO)
 	main_js=/main.js boot_js=/boot.js $(MO) index.html > $@
 
-$(BUILD)/main.js: $(BUILD) $(ELM_SRC_FILES)
+$(BUILD)/main.js: $(BUILD) $(ELM_SRC_FILES) $(ELM)
 	$(ELM)-make $(ELM_SRC)/Main.elm --yes --warn --output $@
 
 $(BUILD)/boot.js: boot.js $(BUILD)
