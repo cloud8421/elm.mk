@@ -39,10 +39,11 @@ WT := $(BIN)/wt
 
 DEVD_VERSION := 0.8
 ELM_VERSION := 0.18.0
+MO_VERSION := 2.0.4
 MODD_VERSION := 0.5
 WT_VERSION := 1.0.4
 
-MO_URL := "https://raw.githubusercontent.com/tests-always-included/mo/master/mo"
+MO_URL := "https://raw.githubusercontent.com/tests-always-included/mo/${MO_VERSION}/mo"
 
 ifeq ($(OS),Darwin)
 	DEVD_URL := "https://github.com/cortesi/devd/releases/download/v${DEVD_VERSION}/devd-${DEVD_VERSION}-osx64.tgz"
