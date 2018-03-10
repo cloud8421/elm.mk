@@ -42,6 +42,7 @@ describe "Roots test" do
       contents.wont_be_empty
       contents.must_have_at_least_one_matching(/build\/main\.js/)
       contents.must_have_at_least_one_matching(/build\/boot\.js/)
+      contents.must_have_at_least_one_matching(/build\/main\.css/)
       contents.must_have_at_least_one_matching(/build\/index\.html/)
       contents.must_have_at_least_one_matching(/devd/)
     end

@@ -2,7 +2,9 @@
 
 BIN := bin
 ELM_SRC := src
+SCSS_SRC := styles
 ELM_SRC_FILES = $(shell find $(ELM_SRC) -type f -name '*.elm' 2>/dev/null)
+ELM_SCSS_FILES = $(shell find $(SCSS_SRC) -type f -name '*.scss' 2>/dev/null)
 BUILD := build
 OS := $(shell uname)
 
@@ -78,10 +80,12 @@ APPLICATION_TARGETS := index.html \
 	$(ELM_SRC)/State.elm \
 	$(ELM_SRC)/View.elm \
 	$(ELM_SRC)/Main.elm \
-	boot.js
+	boot.js \
+	$(SCSS_SRC)/main.scss
 
 BUILD_TARGETS := $(BUILD)/main.js \
 								 $(BUILD)/boot.js \
+								 $(BUILD)/main.css \
 								 $(BUILD)/index.html
 
 COMPILE_TARGETS := $(TOOL_TARGETS) $(SUPPORT_TARGETS) $(APPLICATION_TARGETS) $(BUILD_TARGETS)
@@ -145,7 +149,7 @@ elm-package.json:
 	$(call lazy_tpl,"$$elm_package_json")
 
 modd.conf:
-	echo "$$modd_config" | build=$(BUILD) elm_src=$(ELM_SRC) $(MO) > $@
+	echo "$$modd_config" | build=$(BUILD) elm_src=$(ELM_SRC) scss_src=$(SCSS_SRC) $(MO) > $@
 
 # APPLICATION TARGETS
 
@@ -170,6 +174,12 @@ $(ELM_SRC)/Main.elm: $(ELM_SRC)
 boot.js:
 	$(call lazy_tpl,"$$boot_js")
 
+$(SCSS_SRC):
+	mkdir -p $@
+
+$(SCSS_SRC)/main.scss: $(SCSS_SRC)
+	$(call lazy_tpl,"$$main_scss")
+
 # BUILD TARGETS
 
 $(BUILD):
@@ -183,6 +193,9 @@ $(BUILD)/main.js: $(BUILD) $(ELM_SRC_FILES) $(ELM)
 
 $(BUILD)/boot.js: boot.js $(BUILD)
 	cp $< $@
+
+$(BUILD)/main.css: $(BUILD) $(SCSS_SRC_FILES) $(WT)
+	$(WT) compile -b $(BUILD)/ $(SCSS_SRC)/main.scss
 
 # TEMPLATES
 
@@ -326,12 +339,22 @@ window.onload = function() {
 endef
 export boot_js
 
+define main_scss
+body {
+  color: #130f40;
+}
+endef
+export main_scss
+
 define modd_config
 {{elm_src}}/**/*.elm {
   prep: make {{build}}/main.js
 }
 boot.js {
   prep: make {{build}}/boot.js
+}
+{{scss_src}}/**/*.scss {
+  prep: make {{build}}/main.css
 }
 index.html {
   prep: make {{build}}/index.html
