@@ -1,7 +1,6 @@
 # GENERAL PLUMBING
 
 BIN := bin
-NPM_BIN := node_modules/.bin
 ELM_SRC := src
 ELM_SRC_FILES = $(shell find $(ELM_SRC) -type f -name '*.elm' 2>/dev/null)
 BUILD := build
@@ -31,11 +30,13 @@ help_fun = \
 
 # DEV TOOLS
 
+ELM := $(BIN)/elm
 MO := $(BIN)/mo
 WT := $(BIN)/wt
 DEVD := $(BIN)/devd
 MODD := $(BIN)/modd
 
+ELM_VERSION := 0.18.0
 DEVD_VERSION := 0.8
 WT_VERSION := 1.0.4
 MODD_VERSION := 0.5
@@ -43,19 +44,16 @@ MODD_VERSION := 0.5
 MO_URL := "https://raw.githubusercontent.com/tests-always-included/mo/master/mo"
 
 ifeq ($(OS),Darwin)
+	ELM_URL := "https://dl.bintray.com/elmlang/elm-platform/${ELM_VERSION}/darwin-x64.tar.gz"
 	DEVD_URL := "https://github.com/cortesi/devd/releases/download/v${DEVD_VERSION}/devd-${DEVD_VERSION}-osx64.tgz"
 	WT_URL := "https://github.com/wellington/wellington/releases/download/v${WT_VERSION}/wt_v${WT_VERSION}_darwin_amd64.tar.gz"
 	MODD_URL := "https://github.com/cortesi/modd/releases/download/v${MODD_VERSION}/modd-${MODD_VERSION}-osx64.tgz"
 else
+	ELM_URL := "https://dl.bintray.com/elmlang/elm-platform/${ELM_VERSION}/linux-x64.tar.gz"
 	DEVD_URL := "https://github.com/cortesi/devd/releases/download/v${DEVD_VERSION}/devd-${DEVD_VERSION}-linux64.tgz"
 	WT_URL := "https://github.com/wellington/wellington/releases/download/v${WT_VERSION}/wt_v${WT_VERSION}_linux_amd64.tar.gz"
 	MODD_URL := "https://github.com/cortesi/modd/releases/download/v${MODD_VERSION}/modd-${MODD_VERSION}-linux64.tgz"
 endif
-
-# ELM COMPILER
-
-ELM_VERSION := 0.18
-ELM := $(NPM_BIN)/elm
 
 # MAIN TARGETS
 
@@ -119,7 +117,9 @@ $(MODD):
 	rm $@.tgz
 
 $(ELM):
-	@npm install --silent --no-save elm@${ELM_VERSION}
+	curl ${ELM_URL} -L -o $@.tgz
+	tar -xzf $@.tgz -C bin/ --strip 1
+	rm $@.tgz
 
 # SUPPORT TARGETS
 

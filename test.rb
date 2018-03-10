@@ -4,12 +4,8 @@ require 'minitest/pride'
 
 describe "Roots test" do
   describe "tool targets" do
-    it "elm" do
-      File.exist?("dummy/node_modules/.bin/elm").must_equal true
-    end
-
-    it "dev tools" do
-      ["bin/mo", "bin/wt", "bin/devd", "bin/modd"].each do |bin|
+    it "executables" do
+      ["bin/mo", "bin/elm", "bin/wt", "bin/devd", "bin/modd"].each do |bin|
         File.exist?("dummy/#{bin}").must_equal true
         File.executable?("dummy/#{bin}").must_equal true
       end
