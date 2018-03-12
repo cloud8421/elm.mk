@@ -4,7 +4,7 @@ BIN := bin
 ELM_SRC := src
 SCSS_SRC := styles
 ELM_SRC_FILES = $(shell find $(ELM_SRC) -type f -name '*.elm' 2>/dev/null)
-ELM_SCSS_FILES = $(shell find $(SCSS_SRC) -type f -name '*.scss' 2>/dev/null)
+SCSS_SRC_FILES = $(shell find $(SCSS_SRC) -type f -name '*.scss' 2>/dev/null)
 BUILD := build
 OS := $(shell uname)
 
