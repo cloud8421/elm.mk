@@ -1,10 +1,15 @@
 language: ruby
 
+os:
+  - linux
+  - osx
+
 cache:
   directories:
     - sysconfcpus
 
 install:
-  - .travis/sysconfcpus-install.sh
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then .travis/sysconfcpus-install.sh; fi
 
-script: $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 make test
+script:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 make test; else make test; fi
