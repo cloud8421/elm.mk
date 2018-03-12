@@ -88,6 +88,7 @@ describe "Roots test" do
       contents.wont_be_empty
       contents.must_have_at_least_one_matching(/\/main\.js/)
       contents.must_have_at_least_one_matching(/\/boot\.js/)
+      contents.must_have_at_least_one_matching(/\/main\.css/)
     end
 
     it "build/main.js" do
@@ -101,6 +102,13 @@ describe "Roots test" do
 
       contents.wont_be_empty
       contents.must_have_at_least_one_matching(/Elm\.Main\.embed/)
+    end
+
+    it "build/main.css" do
+      contents = File.readlines_stripped("dummy/build/main.css")
+
+      contents.wont_be_empty
+      contents.must_have_at_least_one_matching(/body/)
     end
   end
 end

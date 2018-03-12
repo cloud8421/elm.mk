@@ -186,7 +186,7 @@ $(BUILD):
 	mkdir -p $@
 
 $(BUILD)/index.html: $(BUILD) index.html $(MO)
-	main_js=/main.js boot_js=/boot.js $(MO) index.html > $@
+	main_js=/main.js boot_js=/boot.js main_css=/main.css $(MO) index.html > $@
 
 $(BUILD)/main.js: $(BUILD) $(ELM_SRC_FILES) $(ELM)
 	$(ELM)-make $(ELM_SRC)/Main.elm --yes --warn --output $@
@@ -243,6 +243,7 @@ define index_html
 <head>
   <meta charset="UTF-8">
   <title>Elm Project</title>
+  <link rel="stylesheet" href="{{main_css}}">
 </head>
 <body>
   <main id="app">
