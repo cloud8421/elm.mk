@@ -3,6 +3,19 @@ require 'minitest/spec'
 require 'minitest/pride'
 
 describe "Roots test" do
+  describe "help" do
+    it "has all commands" do
+      out, _err = capture_subprocess_io do
+        system("make -f dummy/roots.mk help")
+      end
+
+      assert_match %r%all%, out
+      assert_match %r%repl%, out
+      assert_match %r%serve%, out
+      assert_match %r%watch%, out
+      assert_match %r%help%, out
+    end
+  end
   describe "tool targets" do
     it "executables" do
       ["bin/devd", "bin/elm", "bin/mo", "bin/modd", "bin/wt"].each do |bin|
