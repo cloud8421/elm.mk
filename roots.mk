@@ -90,22 +90,22 @@ BUILD_TARGETS := $(BUILD)/main.js \
 
 COMPILE_TARGETS := $(TOOL_TARGETS) $(SUPPORT_TARGETS) $(APPLICATION_TARGETS) $(BUILD_TARGETS)
 
-all: $(COMPILE_TARGETS) ##@Main Compiles entire project
+all: $(COMPILE_TARGETS) ##@Dev Compiles entire project
 .PHONY: all
 
 help: ##@Other Displays this help text
 	@perl -e '$(help_fun)' $(MAKEFILE_LIST)
 .PHONY: help
 
-repl: $(ELM) ##@Main Opens an Elm repl session
+repl: $(ELM) ##@Dev Opens an Elm repl session
 	$(ELM) repl
 .PHONY: repl
 
-serve: $(COMPILE_TARGETS) ##@Main Serves build at http://localhost:8000
+serve: $(COMPILE_TARGETS) ##@Dev Serves build at http://localhost:8000
 	$(DEVD) $(DEVD_OPTIONS)
 .PHONY: serve
 
-watch: $(COMPILE_TARGETS)
+watch: $(COMPILE_TARGETS) ##@Dev Starts the dev watcher (with live-reload server at http://localhost:8000)
 	$(MODD)
 
 # TOOL TARGETS
