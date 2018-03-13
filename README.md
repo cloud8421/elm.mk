@@ -1,6 +1,6 @@
 # Elm.mk
 
-[![Build Status](https://travis-ci.org/cloud8421/elm.mk.svg?branch=travis)](https://travis-ci.org/cloud8421/elm.mk)
+[![Build Status](https://travis-ci.org/cloud8421/elm.mk.svg?branch=legacy)](https://travis-ci.org/cloud8421/elm.mk)
 
 A minimal Makefile to work on [Elm](http://elm-lang.org) projects that require external js and css. It requires
 a working Elm installation.
@@ -27,7 +27,7 @@ development environment. This means that it tries as much as possible to bundle 
 ## Setup from scratch
 
 - `mkdir my_new_project && cd my_new_project`
-- `curl -o elm.mk https://raw.githubusercontent.com/cloud8421/elm.mk/master/elm.mk`
+- `curl -o elm.mk https://raw.githubusercontent.com/cloud8421/elm.mk/legacy/elm.mk`
 - `make -f elm.mk install`
 
 This will generate the needed folder structure and files. Note that at the end of `make install`, you're left with
