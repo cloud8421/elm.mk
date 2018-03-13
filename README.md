@@ -1,6 +1,6 @@
 # Elm.mk
 
-[![Build Status](https://travis-ci.org/cloud8421/elm.mk.svg?branch=travis)](https://travis-ci.org/cloud8421/elm.mk)
+[![Build Status](https://travis-ci.org/cloud8421/elm.mk.svg?branch=master)](https://travis-ci.org/cloud8421/elm.mk)
 
 A fast, close-to-zero dependencies toolchain for Elm-based single page applications.
 
