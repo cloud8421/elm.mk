@@ -51,6 +51,14 @@ Some guidelines:
 
 It may also be worth checking out the documentation for the software used in this boilerplate (like Devd or Modd), as they provide functionality that it's not covered here.
 
+## Elm.mk development
+
+If you're interested in contributing, please make sure you keep tests up to date.
+
+After cloning this repository, just run `make test` (requires Ruby 2.x in your path, no extra dependencies).
+
+Tests are maintained in `tests.rb`.
+
 ## FAQs/Comments
 
 #### Looking for a different version
