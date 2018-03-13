@@ -148,7 +148,7 @@ Makefile:
 elm-package.json:
 	$(call lazy_tpl,"$$elm_package_json")
 
-modd.conf:
+modd.conf: $(MO)
 	echo "$$modd_config" | build=$(BUILD) elm_src=$(ELM_SRC) scss_src=$(SCSS_SRC) $(MO) > $@
 
 # APPLICATION TARGETS
