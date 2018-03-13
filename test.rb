@@ -16,6 +16,19 @@ describe "Elm.mk test" do
       assert_match %r%help%, out
     end
   end
+
+  describe "config" do
+    it "shows relevant paths" do
+      out, _err = capture_subprocess_io do
+        system("make -f dummy/elm.mk config")
+      end
+
+      assert_match %r%src%, out
+      assert_match %r%styles%, out
+      assert_match %r%build%, out
+    end
+  end
+
   describe "tool targets" do
     it "executables" do
       ["bin/devd", "bin/elm", "bin/mo", "bin/modd", "bin/wt"].each do |bin|

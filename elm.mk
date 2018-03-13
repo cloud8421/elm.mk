@@ -108,6 +108,13 @@ serve: $(COMPILE_TARGETS) ##@Dev Serves build at http://localhost:8000
 watch: $(COMPILE_TARGETS) ##@Dev Starts the dev watcher (with live-reload server at http://localhost:8000)
 	$(MODD)
 
+config: ##@Other Displays the current configuration
+	@echo "Elm.mk - Current configuration:\n"
+	@echo "  - Elm sources: ${GREEN}$(ELM_SRC)${RESET}"
+	@echo "  - Scss sources: ${GREEN}$(SCSS_SRC)${RESET}"
+	@echo "  - Build: ${GREEN}$(BUILD)${RESET}"
+.PHONY: config
+
 # TOOL TARGETS
 
 $(BIN):

@@ -38,6 +38,7 @@ Main commands:
 - `make serve`: serves the build folder with a local http server
 - `make watch`: starts the file watcher and the http server, recompiling files on save
 - `make help`: shows all main tasks
+- `make config`: shows paths used for project files
 
 Some guidelines:
 
