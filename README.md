@@ -70,5 +70,9 @@ Make is ubiquitous, mostly pre-installed (or very easy to install) and language-
 Please submit a PR, I'm happy to learn
 
 #### I don't know Make, but I'd like to help. Where can I learn more?
-Smashing Magazine has a [very good introduction](https://www.smashingmagazine.com/2015/10/building-web-applications-with-make/) and there are [good books](http://shop.oreilly.com/product/9780596006105.do) out there. They mostly focus on usage with C, but they should work out fine.
+
+- [The official manual](https://www.gnu.org/software/make/manual/)
+- [Smashing Magazine Introduction](https://www.smashingmagazine.com/2015/10/building-web-applications-with-make/)
+- [O'Reilly book](http://shop.oreilly.com/product/9780596006105.do)
+- [Gotchas - great article](http://gromnitsky.users.sourceforge.net/articles/notes-for-new-make-users/)
 
