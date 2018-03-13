@@ -200,12 +200,12 @@ $(BUILD)/main.css: $(BUILD) $(SCSS_SRC_FILES) $(WT)
 # TEMPLATES
 
 define help_text
-Roots - a simple toolchain for Elm projects\n\nAvailable tasks:\n\n
+Elm.mk - a simple toolchain for Elm projects\n\nAvailable tasks:\n\n
 endef
 export help_text
 
 define Makefile
-include roots.mk
+include elm.mk
 endef
 export Makefile
 

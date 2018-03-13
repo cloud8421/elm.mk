@@ -2,11 +2,11 @@ require 'minitest/autorun'
 require 'minitest/spec'
 require 'minitest/pride'
 
-describe "Roots test" do
+describe "Elm.mk test" do
   describe "help" do
     it "has all commands" do
       out, _err = capture_subprocess_io do
-        system("make -f dummy/roots.mk help")
+        system("make -f dummy/elm.mk help")
       end
 
       assert_match %r%all%, out
@@ -39,7 +39,7 @@ describe "Roots test" do
       contents = File.readlines_stripped("dummy/Makefile")
 
       contents.wont_be_empty
-      contents.must_include "include roots.mk"
+      contents.must_include "include elm.mk"
     end
 
     it "elm-package.json" do
