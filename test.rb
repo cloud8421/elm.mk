@@ -101,6 +101,7 @@ describe "Elm.mk test" do
       contents.wont_be_empty
       contents.must_have_at_least_one_matching(/\/main\.js/)
       contents.must_have_at_least_one_matching(/\/boot\.js/)
+      contents.must_have_at_least_one_matching(/\/service-worker\.js/)
       contents.must_have_at_least_one_matching(/\/main\.css/)
     end
 
@@ -115,6 +116,13 @@ describe "Elm.mk test" do
 
       contents.wont_be_empty
       contents.must_have_at_least_one_matching(/Elm\.Main\.embed/)
+    end
+
+    it "build/service-worker.js" do
+      contents = File.readlines_stripped("dummy/build/service-worker.js")
+
+      contents.wont_be_empty
+      contents.must_have_at_least_one_matching(/v1\.files/)
     end
 
     it "build/main.css" do
