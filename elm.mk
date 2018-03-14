@@ -202,7 +202,7 @@ $(BUILD):
 $(BUILD)/index.html: index.html $(MO)
 	main_js=/main.js boot_js=/boot.js main_css=/main.css service_worker_js=/service-worker.js $(MO) index.html > $@
 
-$(BUILD)/main.js: $(ELM_SRC_FILES) $(ELM)
+$(BUILD)/main.js: $(ELM_SRC)/Main.elm $(ELM_SRC_FILES) $(ELM)
 	$(ELM)-make $(ELM_SRC)/Main.elm --yes --warn --output $@
 
 $(BUILD)/boot.js: boot.js
@@ -211,7 +211,7 @@ $(BUILD)/boot.js: boot.js
 $(BUILD)/service-worker.js: service-worker.js
 	cp $< $@
 
-$(BUILD)/main.css: $(SCSS_SRC_FILES) $(WT)
+$(BUILD)/main.css: $(SCSS_SRC)/main.scss $(SCSS_SRC_FILES) $(WT)
 	$(WT) compile -b $(BUILD)/ $(SCSS_SRC)/main.scss
 
 # TEMPLATES
