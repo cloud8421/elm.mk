@@ -34,7 +34,7 @@ an empty `Makefile` that includes `elm.mk`, so that you can extend it for your n
 Main commands:
 
 - `make`: compiles the project into `build` (installing dependencies if needed)
-- `make dist`: compresses compiled files in `dist`
+- `make dist`: compiles the project into `dist` with production optimisations
 - `make serve`: serves the build folder with a local http server
 - `make watch`: starts the file watcher and the http server, recompiling files on save
 - `make help`: shows all main tasks

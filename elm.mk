@@ -6,6 +6,7 @@ SCSS_SRC := styles
 ELM_SRC_FILES = $(shell find $(ELM_SRC) -type f -name '*.elm' 2>/dev/null)
 SCSS_SRC_FILES = $(shell find $(SCSS_SRC) -type f -name '*.scss' 2>/dev/null)
 BUILD := build
+DIST := dist
 OS := $(shell uname)
 
 # COLORS
@@ -89,10 +90,22 @@ BUILD_TARGETS := $(BUILD) \
 	$(BUILD)/main.css \
 	$(BUILD)/index.html
 
+DIST_TARGETS := $(DIST) \
+	$(DIST)/main.js \
+	$(DIST)/boot.js \
+	$(DIST)/service-worker.js \
+	$(DIST)/main.css \
+	$(DIST)/index.html
+
 COMPILE_TARGETS := $(TOOL_TARGETS) $(SUPPORT_TARGETS) $(APPLICATION_TARGETS) $(BUILD_TARGETS)
+
+PROD_TARGETS := $(TOOL_TARGETS) $(SUPPORT_TARGETS) $(APPLICATION_TARGETS) $(DIST_TARGETS)
 
 all: $(COMPILE_TARGETS) ##@Dev Compiles entire project
 .PHONY: all
+
+prod: $(PROD_TARGETS) ##@Dist Compiles the entire project for production
+.PHONY: prod
 
 help: ##@Other Displays this help text
 	@perl -e '$(help_fun)' $(MAKEFILE_LIST)
@@ -202,6 +215,26 @@ $(BUILD)/service-worker.js: service-worker.js
 $(BUILD)/main.css: $(SCSS_SRC)/main.scss $(SCSS_SRC_FILES) $(WT)
 	$(WT) compile -b $(BUILD)/ $(SCSS_SRC)/main.scss
 
+# DIST TARGETS
+
+$(DIST):
+	mkdir -p $@
+
+$(DIST)/index.html: index.html $(MO)
+	main_js=/main.js boot_js=/boot.js main_css=/main.css service_worker_js=/service-worker.js $(MO) index.html > $@
+
+$(DIST)/main.js: $(ELM_SRC)/Main.elm $(ELM_SRC_FILES) $(ELM)
+	$(ELM) make $(ELM_SRC)/Main.elm --optimize --output $@
+
+$(DIST)/boot.js: boot.js
+	cp $< $@
+
+$(DIST)/service-worker.js: service-worker.js
+	cp $< $@
+
+$(DIST)/main.css: $(SCSS_SRC)/main.scss $(SCSS_SRC_FILES) $(WT)
+	$(WT) compile -s compressed -b $(DIST)/ $(SCSS_SRC)/main.scss
+
 # TEMPLATES
 
 define help_text
@@ -219,6 +252,7 @@ node_modules
 elm-stuff
 elm.js
 $(BUILD)
+$(DIST)
 $(BIN)
 endef
 export gitignore

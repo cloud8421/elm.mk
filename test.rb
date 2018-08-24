@@ -47,6 +47,7 @@ describe "Elm.mk test" do
       contents.must_include "node_modules"
       contents.must_include "elm.js"
       contents.must_include "build"
+      contents.must_include "dist"
       contents.must_include "bin"
     end
 
@@ -129,6 +130,45 @@ describe "Elm.mk test" do
       contents.wont_be_empty
       contents.must_have_at_least_one_matching(/body/)
     end
+  end
+end
+
+describe "dist targets" do
+  it "dist/index.html" do
+    contents = File.readlines_stripped("dummy/dist/index.html")
+
+    contents.wont_be_empty
+    contents.must_have_at_least_one_matching(/\/main\.js/)
+    contents.must_have_at_least_one_matching(/\/boot\.js/)
+    contents.must_have_at_least_one_matching(/\/service-worker\.js/)
+    contents.must_have_at_least_one_matching(/\/main\.css/)
+  end
+
+  it "dist/main.js" do
+    contents = File.readlines_stripped("dummy/dist/main.js")
+
+    contents.wont_be_empty
+  end
+
+  it "dist/boot.js" do
+    contents = File.readlines_stripped("dummy/dist/boot.js")
+
+    contents.wont_be_empty
+    contents.must_have_at_least_one_matching(/Elm\.Main\.init/)
+  end
+
+  it "dist/service-worker.js" do
+    contents = File.readlines_stripped("dummy/dist/service-worker.js")
+
+    contents.wont_be_empty
+    contents.must_have_at_least_one_matching(/v1\.files/)
+  end
+
+  it "dist/main.css" do
+    contents = File.readlines_stripped("dummy/dist/main.css")
+
+    contents.wont_be_empty
+    contents.must_have_at_least_one_matching(/body/)
   end
 end
 
