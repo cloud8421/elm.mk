@@ -7,7 +7,7 @@ ELM_SRC_FILES = $(shell find $(ELM_SRC) -type f -name '*.elm' 2>/dev/null)
 SCSS_SRC_FILES = $(shell find $(SCSS_SRC) -type f -name '*.scss' 2>/dev/null)
 BUILD := build
 DIST := dist
-NPM_BIN := node_modules/.bin/
+NPM_BIN := node_modules/.bin
 OS := $(shell uname)
 
 # COLORS
