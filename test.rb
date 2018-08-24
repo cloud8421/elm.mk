@@ -143,7 +143,7 @@ describe "dist targets" do
     contents = File.readlines_stripped("dummy/dist/index.html")
 
     contents.wont_be_empty
-    contents.must_have_at_least_one_matching(/\/main\.js/)
+    contents.must_have_at_least_one_matching(/\/main\.min\.js/)
     contents.must_have_at_least_one_matching(/\/boot\.js/)
     contents.must_have_at_least_one_matching(/\/service-worker\.js/)
     contents.must_have_at_least_one_matching(/\/main\.css/)
@@ -151,6 +151,12 @@ describe "dist targets" do
 
   it "dist/main.js" do
     contents = File.readlines_stripped("dummy/dist/main.js")
+
+    contents.wont_be_empty
+  end
+
+  it "dist/main.min.js" do
+    contents = File.readlines_stripped("dummy/dist/main.min.js")
 
     contents.wont_be_empty
   end

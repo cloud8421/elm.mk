@@ -49,6 +49,8 @@ MODD_VERSION := 0.5
 WT_VERSION := 1.0.4
 UGLIFYJS_VERSION := 3.4.8
 
+UGLIFYJS_COMPRESS_OPTIONS := 'pure_funcs="F2,F3,F4,F5,F6,F7,F8,F9,A2,A3,A4,A5,A6,A7,A8,A9",pure_getters,keep_fargs=false,unsafe_comps,unsafe'
+
 MO_URL := "https://raw.githubusercontent.com/tests-always-included/mo/${MO_VERSION}/mo"
 
 ifeq ($(OS),Darwin)
@@ -95,7 +97,7 @@ BUILD_TARGETS := $(BUILD) \
 
 DIST_TARGETS := $(UGLIFYJS) \
 	$(DIST) \
-	$(DIST)/main.js \
+	$(DIST)/main.min.js \
 	$(DIST)/boot.js \
 	$(DIST)/service-worker.js \
 	$(DIST)/main.css \
@@ -228,7 +230,10 @@ $(DIST):
 	mkdir -p $@
 
 $(DIST)/index.html: index.html $(MO)
-	main_js=/main.js boot_js=/boot.js main_css=/main.css service_worker_js=/service-worker.js $(MO) index.html > $@
+	main_js=/main.min.js boot_js=/boot.js main_css=/main.css service_worker_js=/service-worker.js $(MO) index.html > $@
+
+$(DIST)/main.min.js: $(UGLIFYJS) $(DIST)/main.js
+	$(UGLIFYJS) $(DIST)/main.js --compress $(UGLIFYJS_COMPRESS_OPTIONS) | $(UGLIFYJS) --mangle --output=$@
 
 $(DIST)/main.js: $(ELM_SRC)/Main.elm $(ELM_SRC_FILES) $(ELM)
 	$(ELM) make $(ELM_SRC)/Main.elm --optimize --output $@
