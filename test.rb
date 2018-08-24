@@ -111,7 +111,7 @@ describe "Elm.mk test" do
       contents = File.readlines_stripped("dummy/build/boot.js")
 
       contents.wont_be_empty
-      contents.must_have_at_least_one_matching(/Elm\.Main\.embed/)
+      contents.must_have_at_least_one_matching(/Elm\.Main\.init/)
     end
 
     it "build/service-worker.js" do

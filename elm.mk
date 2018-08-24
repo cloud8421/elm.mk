@@ -330,7 +330,10 @@ export elm_main
 define boot_js
 window.onload = function() {
   var container = document.getElementById("app");
-  Elm.Main.embed(container);
+  Elm.Main.init({
+    node: container,
+    flags: 10
+  });
 };
 endef
 export boot_js
