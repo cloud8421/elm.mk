@@ -6,6 +6,7 @@ SCSS_SRC := styles
 ELM_SRC_FILES = $(shell find $(ELM_SRC) -type f -name '*.elm' 2>/dev/null)
 SCSS_SRC_FILES = $(shell find $(SCSS_SRC) -type f -name '*.scss' 2>/dev/null)
 BUILD := build
+DIST := dist
 OS := $(shell uname)
 
 # COLORS
@@ -40,7 +41,7 @@ MODD := $(BIN)/modd
 WT := $(BIN)/wt
 
 DEVD_VERSION := 0.8
-ELM_VERSION := 0.18.0
+ELM_VERSION := 0.19.0
 MO_VERSION := 2.0.4
 MODD_VERSION := 0.5
 WT_VERSION := 1.0.4
@@ -49,12 +50,12 @@ MO_URL := "https://raw.githubusercontent.com/tests-always-included/mo/${MO_VERSI
 
 ifeq ($(OS),Darwin)
 	DEVD_URL := "https://github.com/cortesi/devd/releases/download/v${DEVD_VERSION}/devd-${DEVD_VERSION}-osx64.tgz"
-	ELM_URL := "https://dl.bintray.com/elmlang/elm-platform/${ELM_VERSION}/darwin-x64.tar.gz"
+	ELM_URL := "https://github.com/elm/compiler/releases/download/${ELM_VERSION}/binaries-for-mac.tar.gz"
 	MODD_URL := "https://github.com/cortesi/modd/releases/download/v${MODD_VERSION}/modd-${MODD_VERSION}-osx64.tgz"
 	WT_URL := "https://github.com/wellington/wellington/releases/download/v${WT_VERSION}/wt_v${WT_VERSION}_darwin_amd64.tar.gz"
 else
 	DEVD_URL := "https://github.com/cortesi/devd/releases/download/v${DEVD_VERSION}/devd-${DEVD_VERSION}-linux64.tgz"
-	ELM_URL := "https://dl.bintray.com/elmlang/elm-platform/${ELM_VERSION}/linux-x64.tar.gz"
+	ELM_URL := "https://github.com/elm/compiler/releases/download/${ELM_VERSION}/binaries-for-linux.tar.gz"
 	MODD_URL := "https://github.com/cortesi/modd/releases/download/v${MODD_VERSION}/modd-${MODD_VERSION}-linux64.tgz"
 	WT_URL := "https://github.com/wellington/wellington/releases/download/v${WT_VERSION}/wt_v${WT_VERSION}_linux_amd64.tar.gz"
 endif
@@ -65,7 +66,7 @@ DEVD_OPTIONS := -m $(BUILD) -f /index.html
 
 SUPPORT_TARGETS := Makefile \
 	.gitignore \
-	elm-package.json \
+	elm.json \
 	modd.conf
 
 TOOL_TARGETS := $(BIN) \
@@ -77,9 +78,6 @@ TOOL_TARGETS := $(BIN) \
 
 APPLICATION_TARGETS := index.html \
 	$(ELM_SRC) \
-	$(ELM_SRC)/Types.elm \
-	$(ELM_SRC)/State.elm \
-	$(ELM_SRC)/View.elm \
 	$(ELM_SRC)/Main.elm \
 	boot.js \
 	service-worker.js \
@@ -92,10 +90,22 @@ BUILD_TARGETS := $(BUILD) \
 	$(BUILD)/main.css \
 	$(BUILD)/index.html
 
+DIST_TARGETS := $(DIST) \
+	$(DIST)/main.js \
+	$(DIST)/boot.js \
+	$(DIST)/service-worker.js \
+	$(DIST)/main.css \
+	$(DIST)/index.html
+
 COMPILE_TARGETS := $(TOOL_TARGETS) $(SUPPORT_TARGETS) $(APPLICATION_TARGETS) $(BUILD_TARGETS)
+
+PROD_TARGETS := $(TOOL_TARGETS) $(SUPPORT_TARGETS) $(APPLICATION_TARGETS) $(DIST_TARGETS)
 
 all: $(COMPILE_TARGETS) ##@Dev Compiles entire project
 .PHONY: all
+
+prod: $(PROD_TARGETS) ##@Dist Compiles the entire project for production
+.PHONY: prod
 
 help: ##@Other Displays this help text
 	@perl -e '$(help_fun)' $(MAKEFILE_LIST)
@@ -131,7 +141,7 @@ $(DEVD):
 
 $(ELM):
 	${curl} ${ELM_URL} -L -o $@.tgz
-	tar -xzf $@.tgz -C bin/ --strip 1
+	tar -xzf $@.tgz -C bin/
 	rm $@.tgz
 
 $(MO):
@@ -156,8 +166,8 @@ Makefile:
 .gitignore:
 	$(call lazy_tpl,"$$gitignore")
 
-elm-package.json:
-	$(call lazy_tpl,"$$elm_package_json")
+elm.json:
+	$(call lazy_tpl,"$$elm_json")
 
 modd.conf: $(MO)
 	echo "$$modd_config" | build=$(BUILD) elm_src=$(ELM_SRC) scss_src=$(SCSS_SRC) $(MO) > $@
@@ -169,15 +179,6 @@ $(ELM_SRC):
 
 index.html:
 	$(call lazy_tpl,"$$index_html")
-
-$(ELM_SRC)/Types.elm:
-	$(call lazy_tpl,"$$elm_types")
-
-$(ELM_SRC)/State.elm:
-	$(call lazy_tpl,"$$elm_state")
-
-$(ELM_SRC)/View.elm:
-	$(call lazy_tpl,"$$elm_view")
 
 $(ELM_SRC)/Main.elm:
 	$(call lazy_tpl,"$$elm_main")
@@ -203,7 +204,7 @@ $(BUILD)/index.html: index.html $(MO)
 	main_js=/main.js boot_js=/boot.js main_css=/main.css service_worker_js=/service-worker.js $(MO) index.html > $@
 
 $(BUILD)/main.js: $(ELM_SRC)/Main.elm $(ELM_SRC_FILES) $(ELM)
-	$(ELM)-make $(ELM_SRC)/Main.elm --yes --warn --output $@
+	$(ELM) make $(ELM_SRC)/Main.elm --debug --output $@
 
 $(BUILD)/boot.js: boot.js
 	cp $< $@
@@ -213,6 +214,26 @@ $(BUILD)/service-worker.js: service-worker.js
 
 $(BUILD)/main.css: $(SCSS_SRC)/main.scss $(SCSS_SRC_FILES) $(WT)
 	$(WT) compile -b $(BUILD)/ $(SCSS_SRC)/main.scss
+
+# DIST TARGETS
+
+$(DIST):
+	mkdir -p $@
+
+$(DIST)/index.html: index.html $(MO)
+	main_js=/main.js boot_js=/boot.js main_css=/main.css service_worker_js=/service-worker.js $(MO) index.html > $@
+
+$(DIST)/main.js: $(ELM_SRC)/Main.elm $(ELM_SRC_FILES) $(ELM)
+	$(ELM) make $(ELM_SRC)/Main.elm --optimize --output $@
+
+$(DIST)/boot.js: boot.js
+	cp $< $@
+
+$(DIST)/service-worker.js: service-worker.js
+	cp $< $@
+
+$(DIST)/main.css: $(SCSS_SRC)/main.scss $(SCSS_SRC_FILES) $(WT)
+	$(WT) compile -s compressed -b $(DIST)/ $(SCSS_SRC)/main.scss
 
 # TEMPLATES
 
@@ -230,29 +251,39 @@ define gitignore
 node_modules
 elm-stuff
 elm.js
+$(BUILD)
+$(DIST)
+$(BIN)
 endef
 export gitignore
 
-define elm_package_json
+define elm_json
 {
-    "version": "1.0.0",
-    "summary": "helpful summary of your project, less than 80 characters",
-    "repository": "https://github.com/user/project.git",
-    "license": "BSD3",
+    "type": "application",
     "source-directories": [
-        "src",
-        "test"
+        "src"
     ],
-    "exposed-modules": [],
+    "elm-version": "0.19.0",
     "dependencies": {
-        "elm-lang/core": "5.0.0 <= v < 6.0.0",
-        "elm-lang/html": "2.0.0 <= v < 3.0.0",
-        "elm-lang/http": "1.0.0 <= v < 2.0.0"
+        "direct": {
+            "elm/browser": "1.0.0",
+            "elm/core": "1.0.0",
+            "elm/html": "1.0.0"
+        },
+        "indirect": {
+            "elm/json": "1.0.0",
+            "elm/time": "1.0.0",
+            "elm/url": "1.0.0",
+            "elm/virtual-dom": "1.0.0"
+        }
     },
-    "elm-version": "0.18.0 <= v < 0.19.0"
+    "test-dependencies": {
+        "direct": {},
+        "indirect": {}
+    }
 }
 endef
-export elm_package_json
+export elm_json
 
 define index_html
 <!DOCTYPE HTML>
@@ -276,8 +307,17 @@ define index_html
 endef
 export index_html
 
-define elm_types
-module Types exposing (..)
+define elm_main
+module Main exposing (main)
+
+import Browser exposing (Document)
+import Html exposing (h1, text)
+import Platform.Cmd as Cmd
+import Platform.Sub as Sub
+
+
+type alias Flags =
+    Int
 
 
 type Msg
@@ -285,77 +325,51 @@ type Msg
 
 
 type alias Model =
-    Int
-
-endef
-export elm_types
-
-define elm_state
-module State exposing (..)
-
-import Types exposing (..)
+    { count : Int }
 
 
-init : ( Model, Cmd Msg )
-init =
-    0 ! []
+main : Program Flags Model Msg
+main =
+    Browser.document
+        { init = init
+        , view = view
+        , update = update
+        , subscriptions = subscriptions
+        }
+
+
+init : Flags -> ( Model, Cmd Msg )
+init initialCount =
+    ( { count = initialCount }, Cmd.none )
+
+
+view : Model -> Document Msg
+view model =
+    { title = "My new app"
+    , body =
+        [ h1 [] [ text "it works" ]
+        ]
+    }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        NoOp ->
-            model ! []
-
-endef
-export elm_state
-
-define elm_view
-module View exposing (..)
-
-import Html exposing (Html, div, text)
-import Types exposing (..)
-
-
-root : Model -> Html Msg
-root model =
-    div []
-        [ model |> toString |> text ]
-
-endef
-export elm_view
-
-define elm_main
-module Main exposing (..)
-
-import Html
-import Platform.Sub as Sub
-import State
-import Types exposing (..)
-import View
+    ( model, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
-
-
-main : Program Never Model Msg
-main =
-    Html.program
-        { init = State.init
-        , view = View.root
-        , update = State.update
-        , subscriptions = subscriptions
-        }
-
 endef
 export elm_main
 
 define boot_js
 window.onload = function() {
   var container = document.getElementById("app");
-  Elm.Main.embed(container);
+  Elm.Main.init({
+    node: container,
+    flags: 10
+  });
 };
 endef
 export boot_js

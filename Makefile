@@ -2,7 +2,7 @@ dummy:
 	rm -rf $@
 	mkdir $@
 	cp elm.mk dummy/
-	cd dummy && $(MAKE) --jobs=4 -f elm.mk && cd ..
+	cd dummy && $(MAKE) all prod --jobs=4 -f elm.mk && cd ..
 .PHONY: dummy
 
 test: dummy
@@ -11,6 +11,6 @@ test: dummy
 
 test-incremental:
 	cp elm.mk dummy/
-	cd dummy && $(MAKE) --jobs=4 -f elm.mk && cd ..
+	cd dummy && $(MAKE) all prod --jobs=4 -f elm.mk && cd ..
 	ruby test.rb
 .PHONY: test-incremental

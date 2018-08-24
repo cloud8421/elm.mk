@@ -46,6 +46,9 @@ describe "Elm.mk test" do
       contents.must_include "elm-stuff"
       contents.must_include "node_modules"
       contents.must_include "elm.js"
+      contents.must_include "build"
+      contents.must_include "dist"
+      contents.must_include "bin"
     end
 
     it "Makefile" do
@@ -55,11 +58,11 @@ describe "Elm.mk test" do
       contents.must_include "include elm.mk"
     end
 
-    it "elm-package.json" do
-      contents = File.readlines_stripped("dummy/elm-package.json")
+    it "elm.json" do
+      contents = File.readlines_stripped("dummy/elm.json")
 
       contents.wont_be_empty
-      contents.must_have_at_least_one_matching(/elm-lang\/html/)
+      contents.must_have_at_least_one_matching(/elm\/html/)
     end
 
     it "modd.conf" do
@@ -83,14 +86,10 @@ describe "Elm.mk test" do
     end
 
     it "elm source files" do
-      ["Main.elm", "Types.elm", "State.elm", "View.elm"].each do |file|
-        contents = File.readlines_stripped("dummy/src/#{file}")
+      contents = File.readlines_stripped("dummy/src/Main.elm")
 
-        module_name = file.split(".").first
-
-        contents.wont_be_empty
-        contents.first.must_include("module #{module_name}")
-      end
+      contents.wont_be_empty
+      contents.first.must_include("module Main exposing (main)")
     end
   end
 
@@ -115,7 +114,7 @@ describe "Elm.mk test" do
       contents = File.readlines_stripped("dummy/build/boot.js")
 
       contents.wont_be_empty
-      contents.must_have_at_least_one_matching(/Elm\.Main\.embed/)
+      contents.must_have_at_least_one_matching(/Elm\.Main\.init/)
     end
 
     it "build/service-worker.js" do
@@ -131,6 +130,45 @@ describe "Elm.mk test" do
       contents.wont_be_empty
       contents.must_have_at_least_one_matching(/body/)
     end
+  end
+end
+
+describe "dist targets" do
+  it "dist/index.html" do
+    contents = File.readlines_stripped("dummy/dist/index.html")
+
+    contents.wont_be_empty
+    contents.must_have_at_least_one_matching(/\/main\.js/)
+    contents.must_have_at_least_one_matching(/\/boot\.js/)
+    contents.must_have_at_least_one_matching(/\/service-worker\.js/)
+    contents.must_have_at_least_one_matching(/\/main\.css/)
+  end
+
+  it "dist/main.js" do
+    contents = File.readlines_stripped("dummy/dist/main.js")
+
+    contents.wont_be_empty
+  end
+
+  it "dist/boot.js" do
+    contents = File.readlines_stripped("dummy/dist/boot.js")
+
+    contents.wont_be_empty
+    contents.must_have_at_least_one_matching(/Elm\.Main\.init/)
+  end
+
+  it "dist/service-worker.js" do
+    contents = File.readlines_stripped("dummy/dist/service-worker.js")
+
+    contents.wont_be_empty
+    contents.must_have_at_least_one_matching(/v1\.files/)
+  end
+
+  it "dist/main.css" do
+    contents = File.readlines_stripped("dummy/dist/main.css")
+
+    contents.wont_be_empty
+    contents.must_have_at_least_one_matching(/body/)
   end
 end
 
