@@ -218,6 +218,8 @@ define gitignore
 node_modules
 elm-stuff
 elm.js
+$(BUILD)
+$(BIN)
 endef
 export gitignore
 

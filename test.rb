@@ -46,6 +46,8 @@ describe "Elm.mk test" do
       contents.must_include "elm-stuff"
       contents.must_include "node_modules"
       contents.must_include "elm.js"
+      contents.must_include "build"
+      contents.must_include "bin"
     end
 
     it "Makefile" do
