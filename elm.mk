@@ -7,6 +7,7 @@ ELM_SRC_FILES = $(shell find $(ELM_SRC) -type f -name '*.elm' 2>/dev/null)
 SCSS_SRC_FILES = $(shell find $(SCSS_SRC) -type f -name '*.scss' 2>/dev/null)
 BUILD := build
 DIST := dist
+NPM_BIN := node_modules/.bin/
 OS := $(shell uname)
 
 # COLORS
@@ -39,12 +40,14 @@ ELM := $(BIN)/elm
 MO := $(BIN)/mo
 MODD := $(BIN)/modd
 WT := $(BIN)/wt
+UGLIFYJS := $(NPM_BIN)/uglifyjs
 
 DEVD_VERSION := 0.8
 ELM_VERSION := 0.19.0
 MO_VERSION := 2.0.4
 MODD_VERSION := 0.5
 WT_VERSION := 1.0.4
+UGLIFYJS_VERSION := 3.4.8
 
 MO_URL := "https://raw.githubusercontent.com/tests-always-included/mo/${MO_VERSION}/mo"
 
@@ -90,7 +93,8 @@ BUILD_TARGETS := $(BUILD) \
 	$(BUILD)/main.css \
 	$(BUILD)/index.html
 
-DIST_TARGETS := $(DIST) \
+DIST_TARGETS := $(UGLIFYJS) \
+	$(DIST) \
 	$(DIST)/main.js \
 	$(DIST)/boot.js \
 	$(DIST)/service-worker.js \
@@ -216,6 +220,9 @@ $(BUILD)/main.css: $(SCSS_SRC)/main.scss $(SCSS_SRC_FILES) $(WT)
 	$(WT) compile -b $(BUILD)/ $(SCSS_SRC)/main.scss
 
 # DIST TARGETS
+
+$(UGLIFYJS):
+	npm install --no-save uglify-js@${UGLIFYJS_VERSION}
 
 $(DIST):
 	mkdir -p $@

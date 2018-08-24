@@ -134,6 +134,11 @@ describe "Elm.mk test" do
 end
 
 describe "dist targets" do
+  it "uglifyjs" do
+    File.exist?("dummy/node_modules/.bin/uglifyjs").must_equal true
+    File.executable?("dummy/node_modules/.bin/uglifyjs").must_equal true
+  end
+
   it "dist/index.html" do
     contents = File.readlines_stripped("dummy/dist/index.html")
 
