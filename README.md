@@ -42,12 +42,13 @@ Main commands:
 
 Some guidelines:
 
-- Files generated into `build` should not be edited manually
-- All other files can be modified
+- Files generated into `build` should not be edited manually.
+- Files generated into `dist` should not be edited manually. In addition, they're passed through optimisation steps which make them very difficult to read.
+- All other files can be modified.
 - Source `.elm` files should be placed in `src`.
 - Use `boot.js` to start your Elm application and define all ports-related glue code with the external world. The file gets copied automatically to `build`.
 - `scss/main.scss` is the stylesheet main file.
-- `index.html` gets copied the way it is into `build`
+- `index.html` gets copied the way it is into `build`.
 
 It may also be worth checking out the documentation for the software used in this boilerplate (like Devd or Modd), as they provide functionality that it's not covered here.
 
