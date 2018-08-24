@@ -11,5 +11,8 @@ cache:
 install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then .travis/sysconfcpus-install.sh; fi
 
+before_script:
+  - rm -rf /home/travis/.elm
+
 script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 make test; else make test; fi
