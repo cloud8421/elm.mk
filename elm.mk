@@ -47,7 +47,7 @@ ELM_VERSION := 0.19.0
 MO_VERSION := 2.0.4
 MODD_VERSION := 0.5
 WT_VERSION := 1.0.4
-UGLIFYJS_VERSION := 3.4.8
+UGLIFYJS_VERSION := 3.4.9
 
 UGLIFYJS_COMPRESS_OPTIONS := 'pure_funcs="F2,F3,F4,F5,F6,F7,F8,F9,A2,A3,A4,A5,A6,A7,A8,A9",pure_getters,keep_fargs=false,unsafe_comps,unsafe'
 
