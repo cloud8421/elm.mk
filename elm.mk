@@ -10,12 +10,13 @@ DIST := dist
 NPM_BIN := node_modules/.bin
 OS := $(shell uname)
 
-# COLORS
+# COLORS/FORMATTING
 
 GREEN  := $(shell tput -Txterm setaf 2)
 WHITE  := $(shell tput -Txterm setaf 7)
 YELLOW := $(shell tput -Txterm setaf 3)
 RESET  := $(shell tput -Txterm sgr0)
+BLANKLINE := ""
 
 # SUPPORT
 
@@ -25,10 +26,10 @@ help_fun = \
 					 while(<>) { push @{$$help{$$2 // 'options'}}, [$$1, $$3] if /^([a-zA-Z\-]+)\s*:.*\#\#(?:@([a-zA-Z\-]+))?\s(.*)$$/ }; \
 					 print "${help_text}"; \
 					 for (sort keys %help) { \
-					 print "${WHITE}$$_:${RESET}\n"; \
+					 print "  ${WHITE}$$_:${RESET}\n\n"; \
 					 for (@{$$help{$$_}}) { \
-					 $$sep = " " x (32 - length $$_->[0]); \
-					 print "  ${YELLOW}$$_->[0]${RESET}$$sep${GREEN}$$_->[1]${RESET}\n"; \
+					 $$sep = " " x (8 - length $$_->[0]); \
+					 print "    ${YELLOW}$$_->[0]${RESET}$$sep${GREEN}$$_->[1]${RESET}\n"; \
 					 }; \
 					 print "\n"; }
 curl := curl --silent
@@ -129,10 +130,14 @@ watch: $(COMPILE_TARGETS) ##@Dev Starts the dev watcher (with live-reload server
 	$(MODD)
 
 config: ##@Other Displays the current configuration
-	@echo "Elm.mk - Current configuration:\n"
-	@echo "  - Elm sources: ${GREEN}$(ELM_SRC)${RESET}"
-	@echo "  - Scss sources: ${GREEN}$(SCSS_SRC)${RESET}"
-	@echo "  - Build: ${GREEN}$(BUILD)${RESET}"
+	@echo ${BLANKLINE}
+	@echo "      ${GREEN}Elm.mk:${RESET} a simple toolchain for Elm projects"
+	@echo ${BLANKLINE}
+	@echo "     ${YELLOW}Elm src:${RESET} $(ELM_SRC)"
+	@echo "    ${YELLOW}Scss src:${RESET} $(SCSS_SRC)"
+	@echo "  ${YELLOW}Build dest:${RESET} $(BUILD)"
+	@echo "   ${YELLOW}Dist dest:${RESET} $(DIST)"
+	@echo ${BLANKLINE}
 .PHONY: config
 
 # TOOL TARGETS
@@ -250,7 +255,7 @@ $(DIST)/main.css: $(SCSS_SRC)/main.scss $(SCSS_SRC_FILES) $(WT)
 # TEMPLATES
 
 define help_text
-Elm.mk - a simple toolchain for Elm projects\n\nAvailable tasks:\n\n
+\n  ${GREEN}Elm.mk:${RESET} a simple toolchain for Elm projects\n\n  Available tasks:\n\n
 endef
 export help_text
 

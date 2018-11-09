@@ -26,6 +26,7 @@ describe "Elm.mk test" do
       assert_match %r%src%, out
       assert_match %r%styles%, out
       assert_match %r%build%, out
+      assert_match %r%dist%, out
     end
   end
 
