@@ -32,7 +32,7 @@ describe "Elm.mk test" do
 
   describe "tool targets" do
     it "executables" do
-      ["bin/devd", "bin/elm", "bin/mo", "bin/modd", "bin/wt"].each do |bin|
+      ["bin/devd", "bin/elm", "bin/elm-format", "bin/mo", "bin/modd", "bin/wt"].each do |bin|
         File.exist?("dummy/#{bin}").must_equal true
         File.executable?("dummy/#{bin}").must_equal true
       end

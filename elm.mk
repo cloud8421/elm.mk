@@ -38,6 +38,7 @@ curl := curl --silent
 
 DEVD := $(BIN)/devd
 ELM := $(BIN)/elm
+ELM_FORMAT:= $(BIN)/elm-format
 MO := $(BIN)/mo
 MODD := $(BIN)/modd
 WT := $(BIN)/wt
@@ -45,6 +46,7 @@ UGLIFYJS := $(NPM_BIN)/uglifyjs
 
 DEVD_VERSION := 0.8
 ELM_VERSION := 0.19.0
+ELM_FORMAT_VERSION := 0.8.1
 MO_VERSION := 2.0.4
 MODD_VERSION := 0.7
 WT_VERSION := 1.0.4
@@ -57,11 +59,13 @@ MO_URL := "https://raw.githubusercontent.com/tests-always-included/mo/${MO_VERSI
 ifeq ($(OS),Darwin)
 	DEVD_URL := "https://github.com/cortesi/devd/releases/download/v${DEVD_VERSION}/devd-${DEVD_VERSION}-osx64.tgz"
 	ELM_URL := "https://github.com/elm/compiler/releases/download/${ELM_VERSION}/binaries-for-mac.tar.gz"
+	ELM_FORMAT_URL := "https://github.com/avh4/elm-format/releases/download/${ELM_FORMAT_VERSION}/elm-format-${ELM_FORMAT_VERSION}-mac-x64.tgz"
 	MODD_URL := "https://github.com/cortesi/modd/releases/download/v${MODD_VERSION}/modd-${MODD_VERSION}-osx64.tgz"
 	WT_URL := "https://github.com/wellington/wellington/releases/download/v${WT_VERSION}/wt_v${WT_VERSION}_darwin_amd64.tar.gz"
 else
 	DEVD_URL := "https://github.com/cortesi/devd/releases/download/v${DEVD_VERSION}/devd-${DEVD_VERSION}-linux64.tgz"
 	ELM_URL := "https://github.com/elm/compiler/releases/download/${ELM_VERSION}/binaries-for-linux.tar.gz"
+	ELM_FORMAT_URL := "https://github.com/avh4/elm-format/releases/download/${ELM_FORMAT_VERSION}/elm-format-${ELM_FORMAT_VERSION}-linux-x64.tgz"
 	MODD_URL := "https://github.com/cortesi/modd/releases/download/v${MODD_VERSION}/modd-${MODD_VERSION}-linux64.tgz"
 	WT_URL := "https://github.com/wellington/wellington/releases/download/v${WT_VERSION}/wt_v${WT_VERSION}_linux_amd64.tar.gz"
 endif
@@ -78,6 +82,7 @@ SUPPORT_TARGETS := Makefile \
 TOOL_TARGETS := $(BIN) \
 	$(DEVD) \
 	$(ELM) \
+	$(ELM_FORMAT) \
 	$(MO) \
 	$(MODD) \
 	$(WT)
@@ -152,6 +157,11 @@ $(DEVD):
 
 $(ELM):
 	${curl} ${ELM_URL} -L -o $@.tgz
+	tar -xzf $@.tgz -C bin/
+	rm $@.tgz
+
+$(ELM_FORMAT):
+	${curl} ${ELM_FORMAT_URL} -L -o $@.tgz
 	tar -xzf $@.tgz -C bin/
 	rm $@.tgz
 
