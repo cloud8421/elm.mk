@@ -28,7 +28,7 @@ help_fun = \
 					 for (sort keys %help) { \
 					 print "  ${WHITE}$$_:${RESET}\n\n"; \
 					 for (@{$$help{$$_}}) { \
-					 $$sep = " " x (8 - length $$_->[0]); \
+					 $$sep = " " x (13 - length $$_->[0]); \
 					 print "    ${YELLOW}$$_->[0]${RESET}$$sep${GREEN}$$_->[1]${RESET}\n"; \
 					 }; \
 					 print "\n"; }
@@ -38,7 +38,8 @@ curl := curl --silent
 
 DEVD := $(BIN)/devd
 ELM := $(BIN)/elm
-ELM_FORMAT:= $(BIN)/elm-format
+ELM_FORMAT := $(BIN)/elm-format
+ELM_TEST := $(NPM_BIN)/elm-test
 MO := $(BIN)/mo
 MODD := $(BIN)/modd
 WT := $(BIN)/wt
@@ -47,11 +48,13 @@ UGLIFYJS := $(NPM_BIN)/uglifyjs
 DEVD_VERSION := 0.8
 ELM_VERSION := 0.19.0
 ELM_FORMAT_VERSION := 0.8.1
+ELM_TEST_VERSION := 0.19.0-rev6
 MO_VERSION := 2.0.4
 MODD_VERSION := 0.7
 WT_VERSION := 1.0.4
 UGLIFYJS_VERSION := 3.4.9
 
+ELM_TEST_DEFAULT_OPTIONS := --compiler ${ELM}
 UGLIFYJS_COMPRESS_OPTIONS := 'pure_funcs="F2,F3,F4,F5,F6,F7,F8,F9,A2,A3,A4,A5,A6,A7,A8,A9",pure_getters,keep_fargs=false,unsafe_comps,unsafe'
 
 MO_URL := "https://raw.githubusercontent.com/tests-always-included/mo/${MO_VERSION}/mo"
@@ -94,6 +97,9 @@ APPLICATION_TARGETS := index.html \
 	service-worker.js \
 	$(SCSS_SRC)/main.scss
 
+TEST_TARGETS := $(ELM_TEST) \
+	tests/Example.elm
+
 BUILD_TARGETS := $(BUILD) \
 	$(BUILD)/main.js \
 	$(BUILD)/boot.js \
@@ -133,6 +139,14 @@ serve: $(COMPILE_TARGETS) ##@Dev Serves build at http://localhost:8000
 
 watch: $(COMPILE_TARGETS) ##@Dev Starts the dev watcher (with live-reload server at http://localhost:8000)
 	$(MODD)
+
+tests: $(TEST_TARGETS) ##@Dev Runs the entire tests suite via elm-test
+	$(ELM_TEST) $(ELM_TEST_DEFAULT_OPTIONS)
+.PHONY: tests
+
+tests-watch: $(TEST_TARGETS) ##@Dev Starts a watcher to run tests on file change
+	$(ELM_TEST) $(ELM_TEST_DEFAULT_OPTIONS) --watch
+.PHONY: tests
 
 config: ##@Other Displays the current configuration
 	@echo ${BLANKLINE}
@@ -179,6 +193,9 @@ $(WT):
 	tar -xzf $@.tgz -C bin/
 	rm $@.tgz
 
+$(ELM_TEST):
+	npm install --no-save elm-test@${ELM_TEST_VERSION}
+
 # SUPPORT TARGETS
 
 Makefile:
@@ -215,6 +232,9 @@ $(SCSS_SRC):
 
 $(SCSS_SRC)/main.scss: $(SCSS_SRC)
 	$(call lazy_tpl,"$$main_scss")
+
+tests/Example.elm: $(ELM_TEST)
+	yes | $(ELM_TEST) init $(ELM_TEST_DEFAULT_OPTIONS) || true
 
 # BUILD TARGETS
 

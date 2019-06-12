@@ -19,6 +19,7 @@ development environment. This means that it tries as much as possible to bundle 
 - [x] Watch and recompile via [modd](https://github.com/cortesi/modd)
 - [x] Live reload via [devd](https://github.com/cortesi/devd)
 - [x] File generators based on templates
+- [x] Optional support for [elm test](https://github.com/elm-explorations/test)
 
 ## Setup from scratch
 
@@ -39,6 +40,8 @@ Main commands:
 - `make watch`: starts the file watcher and the http server, recompiling files on save
 - `make help`: shows all main tasks
 - `make config`: shows paths used for project files
+- `make tests`: runs the entire test suite
+- `make tests-watch`: starts the test watcher, which reruns tests when files change
 
 Some guidelines:
 

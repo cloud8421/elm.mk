@@ -134,6 +134,26 @@ describe "Elm.mk test" do
   end
 end
 
+describe "test support" do
+  it "elm-test" do
+    File.exist?("dummy/node_modules/.bin/elm-test").must_equal true
+    File.executable?("dummy/node_modules/.bin/elm-test").must_equal true
+  end
+
+  it "tests/Example.elm" do
+    contents = File.readlines_stripped("dummy/tests/Example.elm")
+
+    contents.wont_be_empty
+  end
+
+  it "elm.json" do
+    contents = File.readlines_stripped("dummy/elm.json")
+
+    contents.wont_be_empty
+    contents.must_have_at_least_one_matching(/test-dependencies/)
+  end
+end
+
 describe "dist targets" do
   it "uglifyjs" do
     File.exist?("dummy/node_modules/.bin/uglifyjs").must_equal true
